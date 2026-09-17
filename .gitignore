@@ -1,0 +1,16 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+.DS_Store
+
+# Local environments
+.venv/
+venv/
+env/
+
+# Large/raw local downloads
+*.zip
+*.tar.gz
+
