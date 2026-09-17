@@ -57,7 +57,7 @@ Generate the histogram used in `Data/mlb_2025_RISP_S_histogram_PA251.png`:
 python Script/plot_RISP_histogram.py --output Data/mlb_2025_RISP_S_histogram_PA251.png
 ```
 
-## Current Snapshot
+## Current Snapshot (need to update)
 
 Using 2025 compact PA extracts and a minimum of 251 total PA, the distribution is centered close to zero, which is consistent with the idea that much of observed RISP variation is noisy at one-season sample sizes.
 
