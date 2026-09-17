@@ -23,7 +23,7 @@ However, the current version exposes an important statistical issue. The origina
 └── cle_2026_07_statcast_pitches_raw.csv
 ```
 
-## Method
+## Method (need to update)
 
 For each hitter:
 
@@ -35,7 +35,7 @@ For each hitter:
 
 Success events currently include singles, doubles, triples, and home runs. Walks, hit by pitch, catcher interference, and sacrifice bunts are excluded from the success-rate denominator.
 
-## Reproduce (need to update)
+## Reproduce
 
 Create an environment and install dependencies:
 
