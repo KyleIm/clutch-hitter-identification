@@ -65,10 +65,10 @@ Using 2025 compact PA extracts and a minimum of 251 total PA, the distribution i
 
 ## Next Steps
 
-- Add year-over-year stability checks for player RISP `S`.
-- Compare start-of-PA runner state against final-pitch runner state.
-- Add shrinkage estimates for small-sample RISP performance.
-- Extend the Cleveland 2026 sample into a team-specific dashboard view.
+- Explore a Li-Ma-style ON/OFF significance based on the binomial distribution.
+- Extend the Retrosheet data coverage from 1998 through 2025.
+- Add LIPS data.
+- Set upper limits.
 
 ## Data Notes
 
