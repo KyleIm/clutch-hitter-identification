@@ -1,12 +1,10 @@
-# Finding Clutch Hitters
+# A Method for Identifying Clutch Hitters
 
-Small baseball data science project exploring whether hitters' outcomes with runners in scoring position (RISP) differ from their non-RISP baseline.
+Classic approaches to identifying clutch hitters include Cramer's expected PWA framework and Ruane's direct RISP vs. non-RISP comparison. Ruane's RISP definition could later be replaced by LIPS, or supplemented with a LIPS-based analysis. This project explores whether ideas from astrophysical ON/OFF analysis can be used to statistically improve Ruane-style within-player comparisons.
 
-The current analysis builds compact plate-appearance files, labels each PA as RISP or non-RISP, classifies outcomes as success/failure/excluded, and summarizes player-level differences with a signed Li-Ma style `S` statistic.
+In astrophysical counting experiments, the number of events observed in an ON region, where a source is expected to be present, is compared against the number of events observed in an OFF region, which serves as a background or control region. When the two regions differ in size, observation time, or effective exposure, an exposure ratio is used to account for that imbalance. Li-Ma significance is one representative method built for this kind of problem. Translating the broader ON/OFF philosophy to baseball suggests a way to compare each player's own clutch and non-clutch performance directly, rather than relying primarily on how that player performed relative to the entire league.
 
-## Why this exists
-
-RISP performance is often discussed as a repeatable hitter skill. This repo is a first-pass reproducible workflow for separating observed RISP results from a player's broader plate-appearance baseline.
+However, the current version exposes an important statistical issue. The original Li-Ma significance is derived under a Poisson counting-process model. In baseball, by contrast, measuring the number of successful outcomes out of a fixed number of plate appearances or at-bats is more naturally modeled with a binomial distribution. Because ordinary hitting success probabilities are not clearly in a rare-event regime, simply approximating the problem with a Poisson distribution and applying the existing Li-Ma formula is difficult to justify statistically. For that reason, the currently implemented Li-Ma significance is not presented as the final analysis method. The next step is to investigate whether the ON/OFF likelihood-ratio idea behind Li-Ma can be translated or adapted in a statistically valid way for a binomial setting. Once that methodology is established, it can be applied to the actual search for clutch hitters.
 
 ## Repository Layout
 
