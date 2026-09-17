@@ -1,4 +1,4 @@
-# Baseball RISP Analysis
+# Finding Clutch Hitters
 
 Small baseball data science project exploring whether hitters' outcomes with runners in scoring position (RISP) differ from their non-RISP baseline.
 
@@ -75,4 +75,3 @@ Using 2025 compact PA extracts and a minimum of 251 total PA, the distribution i
 ## Data Notes
 
 The compact 2025 plate-appearance extracts are derived from Retrosheet-style play data. Retrosheet terms and attribution should be followed for any public use of their source data.
-
