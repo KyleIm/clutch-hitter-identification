@@ -12,7 +12,7 @@ TICK_FONT_SIZE = 20
 LEGEND_FONT_SIZE = 16
 
 
-def build_histogram(input_path, min_pa, bins):
+def build_histogram(input_path, min_pa, bins, season_label):
     df = pd.read_csv(input_path)
     filtered = df[df["total_pa"] >= min_pa].dropna(subset=["S"]).copy()
     if filtered.empty:
@@ -48,7 +48,7 @@ def build_histogram(input_path, min_pa, bins):
     ax.set_xlabel("Binomial ON/OFF S", fontsize=LABEL_FONT_SIZE)
     ax.set_ylabel("Players", fontsize=LABEL_FONT_SIZE)
     ax.set_title(
-        f"2025 MLB Binomial ON/OFF S Distribution\n"
+        f"{season_label} MLB Binomial ON/OFF S Distribution\n"
         f"PA >= {min_pa}, N={len(filtered)}, std={std_s:.3f}",
         fontsize=TITLE_FONT_SIZE,
         pad=16,
@@ -68,15 +68,16 @@ def build_histogram(input_path, min_pa, bins):
 
 def main():
     base_dir = Path(__file__).resolve().parents[1]
-    default_input = base_dir / "Data" / "mlb_2025_RISP_sample_counts.csv"
+    default_input = base_dir / "Data" / "mlb_1998_2025_RISP_sample_counts.csv"
 
     parser = argparse.ArgumentParser(description="Plot a histogram of RISP S values.")
     parser.add_argument("--input", default=default_input, type=Path)
     parser.add_argument("--min-pa", default=251, type=int)
     parser.add_argument("--bins", default=30, type=int)
+    parser.add_argument("--season-label", default="1998-2025")
     args = parser.parse_args()
 
-    _, stats = build_histogram(args.input, args.min_pa, args.bins)
+    _, stats = build_histogram(args.input, args.min_pa, args.bins, args.season_label)
     plt.show()
 
     print(f"input: {stats['input']}")
