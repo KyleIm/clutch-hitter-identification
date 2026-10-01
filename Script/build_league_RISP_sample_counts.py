@@ -7,7 +7,7 @@ import pandas as pd
 from lima_histogram_RISP_sample import (
     add_event_result,
     add_risp_flag,
-    li_ma_s,
+    binomial_on_off_s,
     success_rate,
 )
 
@@ -18,6 +18,8 @@ OUTPUT_COLUMNS = [
     "teams",
     "n",
     "b",
+    "n_trials",
+    "b_trials",
     "alpha",
     "n_success",
     "n_failure",
@@ -48,7 +50,9 @@ def build_league_counts(df):
         b_excluded = int((non_risp_df["event_result"] == "excluded").sum())
         n = int(len(risp_df))
         b = int(len(non_risp_df))
-        alpha = n / b if b else float("nan")
+        n_trials = n_success + n_failure
+        b_trials = b_success + b_failure
+        alpha = n_trials / b_trials if b_trials else float("nan")
         n_rate = success_rate(n_success, n_failure)
         b_rate = success_rate(b_success, b_failure)
 
@@ -59,6 +63,8 @@ def build_league_counts(df):
                 "teams": "+".join(sorted(player_df["team"].dropna().unique())),
                 "n": n,
                 "b": b,
+                "n_trials": n_trials,
+                "b_trials": b_trials,
                 "alpha": alpha,
                 "n_success": n_success,
                 "n_failure": n_failure,
@@ -68,7 +74,12 @@ def build_league_counts(df):
                 "b_failure": b_failure,
                 "b_excluded": b_excluded,
                 "b_rate": b_rate,
-                "S": li_ma_s(n_rate, b_rate, alpha),
+                "S": binomial_on_off_s(
+                    n_success,
+                    n_failure,
+                    b_success,
+                    b_failure,
+                ),
                 "total_pa": int(len(player_df)),
             }
         )

@@ -53,17 +53,17 @@ Build the 2025 league player summary:
 python Script/build_league_RISP_sample_counts.py
 ```
 
-Generate the histogram used in `Data/mlb_2025_RISP_S_histogram_PA251.png`:
+Show the histogram:
 
 ```bash
-python Script/plot_RISP_histogram.py --output Data/mlb_2025_RISP_S_histogram_PA251.png
+python Script/plot_RISP_histogram.py
 ```
 
 ## Current Snapshot (need to update)
 
-Using 2025 compact PA extracts and a minimum of 251 total PA, the distribution is centered close to zero, which is consistent with the idea that much of observed RISP variation is noisy at one-season sample sizes.
+Using 2025 compact PA extracts and a minimum of 251 total PA, the current binomial ON/OFF statistic is approximately centered near zero with a spread close to one.
 
-![2025 MLB RISP S Distribution](Data/mlb_2025_RISP_S_histogram_PA251.png)
+![2025 MLB Binomial ON/OFF S Distribution](binomial_onoff_histogram_2025.png)
 
 ## Next Steps
 

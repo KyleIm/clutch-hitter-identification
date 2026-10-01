@@ -14,11 +14,6 @@ def main():
     parser.add_argument("--input", default=default_input, type=Path)
     parser.add_argument("--min-pa", default=251, type=int)
     parser.add_argument("--bins", default=30, type=int)
-    parser.add_argument(
-        "--output",
-        type=Path,
-        help="Optional path for saving the histogram image.",
-    )
     args = parser.parse_args()
 
     df = pd.read_csv(args.input)
@@ -48,23 +43,17 @@ def main():
         linestyle="--",
         label=f"median = {median_s:.3f}",
     )
-    plt.xlabel("RISP Li-Ma S")
+    plt.xlabel("Binomial ON/OFF S")
     plt.ylabel("Players")
     plt.title(
-        f"2025 MLB RISP S Distribution (PA >= {args.min_pa}, N={len(filtered)}, "
+        f"2025 MLB Binomial ON/OFF S Distribution (PA >= {args.min_pa}, N={len(filtered)}, "
         f"std={std_s:.3f})"
     )
     plt.legend()
     plt.tight_layout()
-    if args.output:
-        args.output.parent.mkdir(parents=True, exist_ok=True)
-        plt.savefig(args.output, dpi=160)
-    else:
-        plt.show()
+    plt.show()
 
     print(f"input: {args.input}")
-    if args.output:
-        print(f"output: {args.output}")
     print(f"players: {len(filtered)}")
     print(f"S_mean: {mean_s:.6f}")
     print(f"S_median: {median_s:.6f}")

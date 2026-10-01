@@ -106,6 +106,50 @@ def li_ma_s(n_rate, b_rate, alpha):
     return sign * np.sqrt(value)
 
 
+def _log_likelihood_term(count, observed_prob, null_prob):
+    if count == 0:
+        return 0.0
+    if observed_prob <= 0 or null_prob <= 0:
+        return float("nan")
+    return count * np.log(observed_prob / null_prob)
+
+
+def binomial_on_off_s(on_success, on_failure, off_success, off_failure):
+    on_trials = on_success + on_failure
+    off_trials = off_success + off_failure
+    total_trials = on_trials + off_trials
+    total_success = on_success + off_success
+
+    if on_trials == 0 or off_trials == 0:
+        return float("nan")
+
+    p_on = on_success / on_trials
+    p_off = off_success / off_trials
+    p_0 = total_success / total_trials
+
+    on_failure_prob = 1 - p_on
+    off_failure_prob = 1 - p_off
+    null_failure_prob = 1 - p_0
+
+    terms = [
+        _log_likelihood_term(on_success, p_on, p_0),
+        _log_likelihood_term(on_failure, on_failure_prob, null_failure_prob),
+        _log_likelihood_term(off_success, p_off, p_0),
+        _log_likelihood_term(off_failure, off_failure_prob, null_failure_prob),
+    ]
+    if any(pd.isna(term) for term in terms):
+        return float("nan")
+
+    ts_b = 2 * sum(terms)
+    if ts_b < 0 and np.isclose(ts_b, 0):
+        ts_b = 0.0
+    if ts_b < 0:
+        return float("nan")
+
+    sign = 1 if p_on >= p_off else -1
+    return sign * np.sqrt(ts_b)
+
+
 def build_player_counts(df):
     rows = []
     for (team, batter, player_name), player_df in df.groupby(
@@ -122,7 +166,9 @@ def build_player_counts(df):
         b_excluded = int((non_risp_df["event_result"] == "excluded").sum())
         n = int(len(risp_df))
         b = int(len(non_risp_df))
-        alpha = n / b if b else float("nan")
+        n_trials = n_success + n_failure
+        b_trials = b_success + b_failure
+        alpha = n_trials / b_trials if b_trials else float("nan")
         n_rate = success_rate(n_success, n_failure)
         b_rate = success_rate(b_success, b_failure)
 
@@ -133,7 +179,9 @@ def build_player_counts(df):
                 "batter": batter,
                 "n": n,
                 "b": b,
-                "alpha": n / b if b else float("nan"),
+                "n_trials": n_trials,
+                "b_trials": b_trials,
+                "alpha": alpha,
                 "n_success": n_success,
                 "n_failure": n_failure,
                 "n_excluded": n_excluded,
@@ -142,7 +190,12 @@ def build_player_counts(df):
                 "b_failure": b_failure,
                 "b_excluded": b_excluded,
                 "b_rate": b_rate,
-                "S": li_ma_s(n_rate, b_rate, alpha),
+                "S": binomial_on_off_s(
+                    n_success,
+                    n_failure,
+                    b_success,
+                    b_failure,
+                ),
                 "total_pa": int(len(player_df)),
             }
         )
@@ -156,6 +209,8 @@ def build_player_counts(df):
             "batter",
             "n",
             "b",
+            "n_trials",
+            "b_trials",
             "alpha",
             "n_success",
             "n_failure",
@@ -214,9 +269,17 @@ def main():
     print(f"b_non_RISP: {total_b}")
     print()
     print(
-        counts[["player_name", "n", "b", "n_rate", "b_rate", "alpha", "S"]].to_string(
-            index=False
-        )
+        counts[
+            [
+                "player_name",
+                "n_trials",
+                "b_trials",
+                "n_rate",
+                "b_rate",
+                "alpha",
+                "S",
+            ]
+        ].to_string(index=False)
     )
 
 
