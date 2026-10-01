@@ -87,8 +87,7 @@ Using 1998-2025 compact PA extracts and a minimum of 251 total PA, the current b
 ## Next Steps
 
 - Validate the binomial ON/OFF statistic against standard two-proportion likelihood-ratio tests and simulation checks.
-- Adjust the null model for league-wide situational effects if RISP and non-RISP baselines differ systematically.
-- Split the analysis into season-level, career-level, and rolling-window views.
+- Quantify league-wide RISP/non-RISP and LIPS/non-LIPS baseline shifts, and consider a league-adjusted null only if they materially affect player-level `S`.
 - Add LIPS data.
 - Set upper limits for player-specific clutch effects.
 
