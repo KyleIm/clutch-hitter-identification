@@ -25,6 +25,8 @@ However, the current version exposes an important statistical issue. The origina
 
 ## Method (need to update)
 
+The working derivation for the binomial ON/OFF likelihood-ratio statistic is saved in [`docs/binomial_on_off_likelihood_derivation.md`](docs/binomial_on_off_likelihood_derivation.md).
+
 For each hitter:
 
 - `n`: plate appearances with a runner on second and/or third
