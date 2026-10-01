@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import argparse
+import glob
 from pathlib import Path
 
 import pandas as pd
@@ -98,6 +99,10 @@ def main():
         description="Build league-wide RISP sample counts by player."
     )
     parser.add_argument("--input-dir", default=default_input_dir, type=Path)
+    parser.add_argument(
+        "--input-glob",
+        help="Optional glob for compact PA CSV files. Overrides --input-dir.",
+    )
     parser.add_argument("--output", default=default_output, type=Path)
     parser.add_argument(
         "--situation-column",
@@ -106,9 +111,13 @@ def main():
     )
     args = parser.parse_args()
 
-    files = sorted(args.input_dir.glob("*_2025_plate_appearances_compact.csv"))
+    if args.input_glob:
+        files = [Path(path) for path in sorted(glob.glob(args.input_glob))]
+    else:
+        files = sorted(args.input_dir.glob("*_2025_plate_appearances_compact.csv"))
     if not files:
-        raise FileNotFoundError(f"No compact CSV files found in {args.input_dir}")
+        source = args.input_glob if args.input_glob else args.input_dir
+        raise FileNotFoundError(f"No compact CSV files found in {source}")
 
     df = pd.concat((pd.read_csv(path) for path in files), ignore_index=True)
     df = add_risp_flag(df, args.situation_column)

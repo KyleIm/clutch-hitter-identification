@@ -39,13 +39,13 @@ def format_date(yyyymmdd):
     return f"{yyyymmdd[:4]}-{yyyymmdd[4:6]}-{yyyymmdd[6:8]}"
 
 
-def load_player_names(zip_path, year):
+def load_player_names(zip_path, year=None):
     names = {}
-    member = f"{year}allplayers.csv"
+    member = f"{year}allplayers.csv" if year else "allplayers.csv"
     with zipfile.ZipFile(zip_path) as zf, zf.open(member) as fh:
         reader = csv.DictReader((line.decode("utf-8-sig") for line in fh))
         for row in reader:
-            names[row["id"]] = f'{row["last"]}, {row["first"]}'
+            names.setdefault(row["id"], f'{row["last"]}, {row["first"]}')
     return names
 
 
@@ -106,8 +106,7 @@ def iter_play_rows(zip_path, year):
         yield from csv.DictReader((line.decode("utf-8-sig") for line in fh))
 
 
-def build_compact(zip_path, year, team):
-    player_names = load_player_names(zip_path, year)
+def build_compact(zip_path, year, player_names, team=None):
     pa_counts = defaultdict(int)
     pa_start_by_game_side_batter = {}
 
@@ -121,7 +120,7 @@ def build_compact(zip_path, year, team):
         if row["pa"] != "1":
             continue
 
-        if row["batteam"] != team:
+        if team and row["batteam"] != team:
             pa_start_by_game_side_batter.pop(key, None)
             continue
 
@@ -133,7 +132,7 @@ def build_compact(zip_path, year, team):
         yield {
             "game_date": format_date(row["date"]),
             "game_pk": row["gid"],
-            "team": team,
+            "team": row["batteam"],
             "player_name": player_names.get(row["batter"], row["batter"]),
             "batter": row["batter"],
             "batter_pa_number_this_game": pa_counts[(row["gid"], row["batter"])],
@@ -153,16 +152,28 @@ def build_compact(zip_path, year, team):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--zip", required=True, type=Path)
+    parser.add_argument(
+        "--players-zip",
+        type=Path,
+        help="Zip containing allplayers.csv. Defaults to --zip for legacy inputs.",
+    )
     parser.add_argument("--year", required=True, type=int)
-    parser.add_argument("--team", default="CLE")
+    parser.add_argument(
+        "--team",
+        help="Optional batting team code. If omitted, all teams are included.",
+    )
     parser.add_argument("--output", required=True, type=Path)
     args = parser.parse_args()
+
+    player_zip = args.players_zip or args.zip
+    player_year = None if args.players_zip else args.year
+    player_names = load_player_names(player_zip, player_year)
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
     with args.output.open("w", newline="") as fh:
         writer = csv.DictWriter(fh, fieldnames=OUTPUT_COLUMNS)
         writer.writeheader()
-        writer.writerows(build_compact(args.zip, args.year, args.team))
+        writer.writerows(build_compact(args.zip, args.year, player_names, args.team))
 
 
 if __name__ == "__main__":
