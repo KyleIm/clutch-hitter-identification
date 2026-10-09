@@ -57,6 +57,29 @@ def add_risp_flag(df, situation_column):
     return df
 
 
+def add_lips_flag(df, situation_column="runner_situation_start"):
+    df = df.copy()
+    df[situation_column] = df[situation_column].map(normalize_runner_situation)
+    inning = pd.to_numeric(df["inning"], errors="coerce")
+    bat_score = pd.to_numeric(df["bat_score"], errors="coerce")
+    fld_score = pd.to_numeric(df["fld_score"], errors="coerce")
+    score_diff = bat_score - fld_score
+    bases_loaded = df[situation_column] == "1B+2B+3B"
+
+    df["is_risp"] = (inning >= 7) & (
+        score_diff.between(-3, 1) | (bases_loaded & (score_diff == -4))
+    )
+    return df
+
+
+def add_situation_flag(df, situation, situation_column):
+    if situation == "risp":
+        return add_risp_flag(df, situation_column)
+    if situation == "lips":
+        return add_lips_flag(df, "runner_situation_start")
+    raise ValueError(f"Unknown situation: {situation}")
+
+
 def add_event_result(df):
     df = df.copy()
     df["event_result"] = "excluded"
@@ -237,9 +260,10 @@ def main():
     )
 
     parser = argparse.ArgumentParser(
-        description="Count player PA in RISP (n) and non-RISP (b) situations."
+        description="Count player PA in ON (n) and OFF (b) situations."
     )
     parser.add_argument("--input", default=default_input, type=Path)
+    parser.add_argument("--situation", choices=["risp", "lips"], default="risp")
     parser.add_argument(
         "--situation-column",
         default="runner_situation_before_final_pitch",
@@ -254,7 +278,7 @@ def main():
     args = parser.parse_args()
 
     df = pd.read_csv(args.input)
-    df = add_risp_flag(df, args.situation_column)
+    df = add_situation_flag(df, args.situation, args.situation_column)
     df = add_event_result(df)
     counts = build_player_counts(df)
     args.output.parent.mkdir(parents=True, exist_ok=True)
@@ -265,8 +289,9 @@ def main():
     print(f"input: {args.input}")
     print(f"output: {args.output}")
     print(f"players: {len(counts)}")
-    print(f"n_RISP: {total_n}")
-    print(f"b_non_RISP: {total_b}")
+    print(f"situation: {args.situation}")
+    print(f"n_ON: {total_n}")
+    print(f"b_OFF: {total_b}")
     print()
     print(
         counts[

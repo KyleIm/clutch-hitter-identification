@@ -7,7 +7,7 @@ import pandas as pd
 
 from lima_histogram_RISP_sample import (
     add_event_result,
-    add_risp_flag,
+    add_situation_flag,
     binomial_on_off_s,
     success_rate,
 )
@@ -96,7 +96,7 @@ def main():
     default_output = base_dir / "Data" / "mlb_2025_RISP_sample_counts.csv"
 
     parser = argparse.ArgumentParser(
-        description="Build league-wide RISP sample counts by player."
+        description="Build league-wide ON/OFF sample counts by player."
     )
     parser.add_argument("--input-dir", default=default_input_dir, type=Path)
     parser.add_argument(
@@ -104,6 +104,7 @@ def main():
         help="Optional glob for compact PA CSV files. Overrides --input-dir.",
     )
     parser.add_argument("--output", default=default_output, type=Path)
+    parser.add_argument("--situation", choices=["risp", "lips"], default="risp")
     parser.add_argument(
         "--situation-column",
         default="runner_situation_before_final_pitch",
@@ -120,7 +121,7 @@ def main():
         raise FileNotFoundError(f"No compact CSV files found in {source}")
 
     df = pd.concat((pd.read_csv(path) for path in files), ignore_index=True)
-    df = add_risp_flag(df, args.situation_column)
+    df = add_situation_flag(df, args.situation, args.situation_column)
     df = add_event_result(df)
     counts = build_league_counts(df)
 
@@ -135,6 +136,7 @@ def main():
 
     print(f"input_dir: {args.input_dir}")
     print(f"output: {args.output}")
+    print(f"situation: {args.situation}")
     print(f"teams/files: {len(files)}")
     print(f"players: {len(counts)}")
     print(f"valid_S_players: {len(valid)}")

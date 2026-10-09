@@ -80,15 +80,16 @@ python Script/plot_RISP_histogram.py
 
 ## Current Snapshot
 
-Using 1998-2025 compact PA extracts and a minimum of 251 total PA, the current binomial ON/OFF statistic is approximately centered near zero with a spread close to one.
+Using 1998-2025 compact PA extracts and a minimum of 3000 total PA, the RISP distribution remains close to centered, while the LIPS distribution shifts negative. The LIPS shift is consistent with a harder late/close run environment and should be checked against league-wide baseline differences before interpreting player-level signs as clutch effects.
 
-![1998-2025 MLB Binomial ON/OFF S Distribution](binomial_onoff_histogram_1998_2025.png)
+![1998-2025 RISP Binomial ON/OFF S Distribution](binomial_onoff_risp_histogram_1998_2025_pa3000.png)
+
+![1998-2025 LIPS Binomial ON/OFF S Distribution](binomial_onoff_lips_histogram_1998_2025_pa3000.png)
 
 ## Next Steps
 
 - Validate the binomial ON/OFF statistic against standard two-proportion likelihood-ratio tests and simulation checks.
 - Quantify league-wide RISP/non-RISP and LIPS/non-LIPS baseline shifts, and consider a league-adjusted null only if they materially affect player-level `S`.
-- Add LIPS data.
 - Set upper limits for player-specific clutch effects.
 
 ## Data Notes

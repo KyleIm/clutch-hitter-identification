@@ -70,7 +70,9 @@ def main():
     base_dir = Path(__file__).resolve().parents[1]
     default_input = base_dir / "Data" / "mlb_1998_2025_RISP_sample_counts.csv"
 
-    parser = argparse.ArgumentParser(description="Plot a histogram of RISP S values.")
+    parser = argparse.ArgumentParser(
+        description="Plot a histogram of binomial ON/OFF S values."
+    )
     parser.add_argument("--input", default=default_input, type=Path)
     parser.add_argument("--min-pa", default=251, type=int)
     parser.add_argument("--bins", default=30, type=int)
