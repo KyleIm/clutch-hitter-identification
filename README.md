@@ -80,7 +80,7 @@ python Script/plot_RISP_histogram.py
 
 ## Current Snapshot
 
-Using 1998-2025 compact PA extracts and a minimum of 2000 total PA, the RISP distribution remains close to centered, while the LIPS distribution shifts negative. The LIPS shift is consistent with a harder late/close run environment and should be checked against league-wide baseline differences before interpreting player-level signs as clutch effects.
+The histograms below show career-level RISP and LIPS signed binomial ON/OFF significance for 1998-2025 hitters with at least 2000 career plate appearances. The RISP distribution remains relatively close to centered, while the LIPS distribution is shifted substantially negative. This shift is plausibly related to the fact that LIPS plate appearances occur in late and close game states, where hitters are more likely to face high-leverage relief pitchers. The league-wide LIPS/non-LIPS baseline should therefore be evaluated before interpreting player-level signs as clutch effects.
 
 ![1998-2025 RISP Binomial ON/OFF S Distribution](binomial_onoff_risp_histogram_1998_2025_pa2000.png)
 
@@ -128,15 +128,6 @@ This analysis should be compared with existing sabermetric clutch measurements, 
 - Identify players whose rankings differ substantially between the binomial ON/OFF significance and established clutch metrics.
 - Discuss differences in the underlying estimands: statistical evidence for batting-average changes versus situational run or win contributions.
 - Avoid claiming that the proposed framework is superior solely because it produces a likelihood-ratio significance.
-
-### Season-level persistence
-
-Career-level significance remains the primary measurement in this repository. Season-level estimates are intended for persistence testing rather than as the primary ranking metric.
-
-- Calculate season-level RISP and LIPS significance where sample sizes permit.
-- Examine year-to-year consistency and repeatability.
-- Determine whether career-level extreme performers show persistent situational effects across seasons.
-- Distinguish repeatable player-specific effects from statistical fluctuations.
 
 ### Upper limits
 
