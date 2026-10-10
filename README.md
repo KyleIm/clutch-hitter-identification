@@ -142,13 +142,13 @@ Batting observations can be partitioned into four mutually exclusive categories 
 For each category, hits and eligible batting trials should be calculated using the same event-filtering rules used in the current marginal analyses. The number of hits in category `j` can then be modeled as
 
 $$
-H_j \sim \operatorname{Binomial}(N_j, p_j).
+H_j \sim \mathrm{Binomial}(N_j, p_j).
 $$
 
 A binomial logistic model can represent conditional RISP and LIPS effects:
 
 $$
-\operatorname{logit}(p_j)
+\mathrm{logit}(p_j)
 =
 \beta_0+\beta_R I_{\mathrm{RISP},j}
 +\beta_L I_{\mathrm{LIPS},j}.
