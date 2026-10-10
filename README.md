@@ -122,13 +122,7 @@ RISP and LIPS are separate clutch situation definitions. They are analyzed with 
 
 ### Joint RISP–LIPS Likelihood-Ratio Analysis
 
-The current implementation computes two separate career-level signed binomial ON/OFF likelihood-ratio statistics: `S_R` for RISP versus non-RISP batting performance and `S_L` for LIPS versus non-LIPS batting performance. A combined measure such as
-
-$$
-C_{\mathrm{new}} = aS_R + bS_L
-$$
-
-would require defensible weights and must account for overlapping observations and statistical dependence between the two situation definitions. Rather than assigning arbitrary weights or fitting them directly to an existing sabermetric metric, the next methodological objective is to investigate whether a combined clutch measure can be derived from a joint likelihood model. FanGraphs Clutch should be reserved for subsequent external comparison, not used as the primary training target for determining the new index.
+The current implementation computes two separate career-level signed binomial ON/OFF likelihood-ratio statistics: `S_R` for RISP versus non-RISP batting performance and `S_L` for LIPS versus non-LIPS batting performance. A combined measure such as `C_new = a S_R + b S_L` would require defensible weights and must account for overlapping observations and statistical dependence between the two situation definitions. Rather than assigning arbitrary weights or fitting them directly to an existing sabermetric metric, the next methodological objective is to investigate whether a combined clutch measure can be derived from a joint likelihood model. FanGraphs Clutch should be reserved for subsequent external comparison, not used as the primary training target for determining the new index.
 
 Batting observations can be partitioned into four mutually exclusive categories according to RISP and LIPS indicators:
 
@@ -139,35 +133,19 @@ Batting observations can be partitioned into four mutually exclusive categories 
 | C | No | Yes |
 | D | Yes | Yes |
 
-For each category, hits and eligible batting trials should be calculated using the same event-filtering rules used in the current marginal analyses. The number of hits in category `j` can then be modeled as
-
-$$
-H_j \sim \mathrm{Binomial}(N_j, p_j).
-$$
+For each category, hits and eligible batting trials should be calculated using the same event-filtering rules used in the current marginal analyses. The number of hits in category `j` can then be modeled as `H_j ~ Binomial(N_j, p_j)`.
 
 A binomial logistic model can represent conditional RISP and LIPS effects:
 
-$$
-\mathrm{logit}(p_j)
-=
-\beta_0+\beta_R I_{\mathrm{RISP},j}
-+\beta_L I_{\mathrm{LIPS},j}.
-$$
+`logit(p_j) = beta_0 + beta_R I_RISP,j + beta_L I_LIPS,j`.
 
 The coefficients represent conditional situational effects on batting success probability. The joint null hypothesis is
 
-$$
-H_0:\beta_R=\beta_L=0.
-$$
+`H_0: beta_R = beta_L = 0`.
 
 The likelihood-ratio statistic is
 
-$$
-TS_{\mathrm{joint}}
-=
-2\left(\ln\mathcal L_{\mathrm{alternative}}
--\ln\mathcal L_{\mathrm{null}}\right).
-$$
+`TS_joint = 2 (log L_alternative - log L_null)`.
 
 Under standard regularity conditions, the asymptotic null distribution is chi-square with two degrees of freedom. This is an established likelihood-ratio methodology applied to a joint baseball situational model, not a newly invented statistical test.
 
@@ -200,13 +178,7 @@ No final directional index has been selected or validated. Any proposed index mu
 
 ### Comparison with established clutch metrics
 
-This analysis should be compared with existing sabermetric clutch measurements, especially FanGraphs Clutch and Ruane's RISP/non-RISP comparison using the difference in BPS (`BA + SLG`). FanGraphs Clutch is defined as
-
-$$
-Clutch_{\mathrm{FG}}
-=
-\frac{WPA}{pLI}-WPA/LI.
-$$
+This analysis should be compared with existing sabermetric clutch measurements, especially FanGraphs Clutch and Ruane's RISP/non-RISP comparison using the difference in BPS (`BA + SLG`). FanGraphs Clutch is defined as `Clutch_FG = WPA / pLI - WPA / LI`.
 
 The goal is to compare independently developed joint likelihood-based clutch measures with established metrics. FanGraphs Clutch should not be used to train the coefficients of the proposed joint index in the primary methodology; it should remain an external comparison benchmark.
 
