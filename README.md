@@ -80,11 +80,11 @@ python Script/plot_RISP_histogram.py
 
 ## Current Snapshot
 
-Using 1998-2025 compact PA extracts and a minimum of 1000 total PA, the RISP distribution remains close to centered, while the LIPS distribution shifts negative. The LIPS shift is consistent with a harder late/close run environment and should be checked against league-wide baseline differences before interpreting player-level signs as clutch effects.
+Using 1998-2025 compact PA extracts and a minimum of 2000 total PA, the RISP distribution remains close to centered, while the LIPS distribution shifts negative. The LIPS shift is consistent with a harder late/close run environment and should be checked against league-wide baseline differences before interpreting player-level signs as clutch effects.
 
-![1998-2025 RISP Binomial ON/OFF S Distribution](binomial_onoff_risp_histogram_1998_2025_pa1000.png)
+![1998-2025 RISP Binomial ON/OFF S Distribution](binomial_onoff_risp_histogram_1998_2025_pa2000.png)
 
-![1998-2025 LIPS Binomial ON/OFF S Distribution](binomial_onoff_lips_histogram_1998_2025_pa1000.png)
+![1998-2025 LIPS Binomial ON/OFF S Distribution](binomial_onoff_lips_histogram_1998_2025_pa2000.png)
 
 ## Next Steps
 
