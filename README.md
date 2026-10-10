@@ -86,11 +86,61 @@ Using 1998-2025 compact PA extracts and a minimum of 2000 total PA, the RISP dis
 
 ![1998-2025 LIPS Binomial ON/OFF S Distribution](binomial_onoff_lips_histogram_1998_2025_pa2000.png)
 
-## Next Steps
+## Planned Analyses
 
-- Validate the binomial ON/OFF statistic against standard two-proportion likelihood-ratio tests and simulation checks.
-- Quantify league-wide RISP/non-RISP and LIPS/non-LIPS baseline shifts, and consider a league-adjusted null only if they materially affect player-level `S`.
-- Set upper limits for player-specific clutch effects.
+### Statistical validation and sensitivity analysis
+
+The current ON/OFF statistic uses a binomial likelihood for two independent success/failure samples and is mathematically equivalent to a standard two-proportion likelihood-ratio, or G, test. The Li-Ma connection is methodological motivation from the ON/OFF likelihood-ratio framework; the likelihood used here is binomial rather than Poisson.
+
+- Validate the binomial ON/OFF statistic against the standard two-proportion likelihood-ratio (G) test.
+- Perform Monte Carlo null simulations using observed ON/OFF trial counts to evaluate the calibration of the signed significance statistic.
+- Conduct PA cutoff sensitivity analyses using career PA thresholds of 1000, 2000, and 3000. The current primary threshold is 2000 PA.
+- Compare the mean, median, standard deviation, skewness, and positive/negative tail fractions at thresholds such as `|S| > 2` and `|S| > 3`.
+- Examine the stability of career-level significance using leave-one-season-out analyses.
+- Distinguish statistical robustness from year-to-year repeatability, which should be evaluated separately.
+- Address multiple testing across players using an appropriate method, such as false discovery rate control or population-level null simulations.
+
+### RISP and LIPS cross-validation
+
+RISP and LIPS are separate clutch situation definitions. They are analyzed with the same binomial ON/OFF framework, but their baseline distributions need not be the same. For 1998-2025 career-level results with career PA >= 2000, the current player sample contains 861 hitters.
+
+| Statistic | RISP | LIPS |
+|---|---:|---:|
+| Mean | -0.212 | -0.989 |
+| Standard deviation | 1.051 | 1.079 |
+
+- Calculate Pearson and Spearman correlations between player-level RISP and LIPS signed significance.
+- Generate a player-level scatter plot comparing the two statistics.
+- Compare the overlap of top-performing and bottom-performing players, including the top and bottom 5%.
+- Compare empirical standardized scores within each distribution, while explicitly distinguishing these relative scores from statistical detection significance.
+- Compare raw ON/OFF effect sizes, defined as batting-average differences, for RISP and LIPS.
+- Quantify league-wide RISP/non-RISP and LIPS/non-LIPS baseline differences and investigate their effects on the significance distributions.
+- Account for overlap between RISP and LIPS plate appearances when interpreting correlations. Null simulations or permutation methods should be used to evaluate whether observed agreement exceeds what would be expected from overlapping samples alone.
+- Avoid automatically recentering the signed significance distributions and reinterpreting recentered values as statistical significance.
+
+### Comparison with established clutch metrics
+
+This analysis should be compared with existing sabermetric clutch measurements, especially FanGraphs Clutch, which is based on Win Probability Added and Leverage Index, and Ruane's RISP/non-RISP comparison using the difference in BPS (`BA + SLG`).
+
+- Match players and analysis periods across the different metrics.
+- Calculate Pearson and Spearman correlations between RISP significance, LIPS significance, and established clutch metrics.
+- Generate scatter plots and compare overlap among top-ranked and bottom-ranked players.
+- Identify players whose rankings differ substantially between the binomial ON/OFF significance and established clutch metrics.
+- Discuss differences in the underlying estimands: statistical evidence for batting-average changes versus situational run or win contributions.
+- Avoid claiming that the proposed framework is superior solely because it produces a likelihood-ratio significance.
+
+### Season-level persistence
+
+Career-level significance remains the primary measurement in this repository. Season-level estimates are intended for persistence testing rather than as the primary ranking metric.
+
+- Calculate season-level RISP and LIPS significance where sample sizes permit.
+- Examine year-to-year consistency and repeatability.
+- Determine whether career-level extreme performers show persistent situational effects across seasons.
+- Distinguish repeatable player-specific effects from statistical fluctuations.
+
+### Upper limits
+
+- Set upper limits for player-specific clutch effects after the null calibration and league-wide situational baseline checks are complete.
 
 ## Data Notes
 
