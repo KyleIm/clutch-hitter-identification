@@ -1,9 +1,11 @@
 # Roadmap
 
-The portfolio’s next steps are joint modeling and external benchmarking.
-See the [README analysis index](../README.md#analysis) for completed work.
+- [Step 1 — RISP–LIPS correlation](analysis/01_risp_lips_correlation.md) is complete.
+- [Step 2 — Baseball-Reference external benchmark](analysis/02_external_benchmark.md) is complete.
 
-## Step 2: Joint RISP–LIPS Likelihood-Ratio Analysis
+## Step 3: Joint RISP–LIPS Index Development
+
+Deferred until the Step 2 results have been reviewed.
 
 Use the four mutually exclusive categories verified in [Step 1](analysis/01_risp_lips_correlation.md).
 
@@ -54,26 +56,6 @@ Potential approaches for future investigation include:
 - A covariance-aware directional statistic derived from the joint model.
 
 No final directional index has been selected or validated. Any proposed index must be evaluated for statistical interpretation, null-distribution calibration, sensitivity to sample size, stability under different PA cutoffs, dependence on league-wide situational baselines, and potential double-counting of overlapping RISP/LIPS observations. A new directional index should not be labeled as a Z-score or statistical significance unless its calibration supports that interpretation.
-
-## Step 3: External Benchmark Comparison
-
-This analysis should be compared with existing sabermetric clutch measurements, especially FanGraphs Clutch and Ruane's RISP/non-RISP comparison using the difference in BPS (`BA + SLG`). FanGraphs Clutch is defined as `Clutch_FG = WPA / pLI - WPA / LI`.
-
-The goal is to compare independently developed joint likelihood-based clutch measures with established metrics. FanGraphs Clutch should not be used to train the coefficients of the proposed joint index in the primary methodology; it should remain an external comparison benchmark.
-
-- Obtain FanGraphs Clutch measurements for a period matching the Retrosheet dataset (1998-2025), subject to data availability.
-- Match FanGraphs player identifiers with Retrosheet player identifiers.
-- Match players and analysis periods across the different metrics.
-- Compare the existing marginal RISP/LIPS significance statistics with FanGraphs Clutch.
-- Compare the proposed directional joint clutch index with FanGraphs Clutch after the index has been statistically defined and validated.
-- Calculate Pearson and Spearman correlations between RISP significance, LIPS significance, the proposed joint measures, and established clutch metrics.
-- Generate scatter plots and compare overlap among top-ranked, bottom-ranked, and extreme performers.
-- Identify players whose likelihood-based rankings differ substantially from their FanGraphs Clutch ranking.
-- Evaluate whether the joint index provides information distinct from existing win-probability-based metrics.
-- Consider the influence of career length and batting opportunities on cross-metric comparisons.
-- Discuss differences in the underlying estimands: statistical evidence for hit-rate changes versus situational run or win contributions.
-- Do not treat the unsigned joint likelihood-ratio statistic as directly equivalent to signed FanGraphs Clutch. If the unsigned statistic is compared with the magnitude of FanGraphs Clutch, the limitations of that comparison should be stated explicitly.
-- Avoid claiming that the proposed framework is superior solely because it produces a likelihood-ratio significance.
 
 ## Optional Extensions
 

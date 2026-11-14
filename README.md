@@ -38,14 +38,19 @@ correlations fell within the central 95% null intervals.
 
 ![RISP and LIPS score distributions by career PA cutoff](Results/RISP_LIPS/figures/boxplot.png)
 
+Against Baseball-Reference Clutch at 2,000 PA, Pearson r was 0.276 for
+RISP and 0.354 for LIPS. The one-sided Williams test gave p = 0.041, and
+the two-sided bootstrap 95% interval for the difference was [−0.013, 0.167].
+[Step 2 results](docs/analysis/02_external_benchmark.md)
+
 ## Analysis
 
 | Analysis | Description | Status |
 |---|---|---|
 | [Baseline Analysis](docs/analysis/00_baseline_analysis.md) | Binomial ON/OFF statistics and significance distributions | Completed |
 | [Step 1](docs/analysis/01_risp_lips_correlation.md) | RISP–LIPS EDA, correlation analysis, and hypothesis testing | Completed |
-| [Step 2](docs/roadmap.md#step-2-joint-risplips-likelihood-ratio-analysis) | Joint RISP–LIPS likelihood-ratio modeling | Planned |
-| [Step 3](docs/roadmap.md#step-3-external-benchmark-comparison) | External comparison with established clutch metrics | Planned |
+| [Step 2](docs/analysis/02_external_benchmark.md) | Baseball-Reference Clutch and WPA benchmark | Completed |
+| [Step 3](docs/roadmap.md#step-3-joint-risplips-index-development) | Joint RISP–LIPS index development | Deferred |
 
 ## Reproduction
 
@@ -55,6 +60,7 @@ From the repository root, create a virtual environment with
 ```bash
 python -m pip install -r requirements.txt
 python Script/analyze_risp_lips.py
+python Script/analyze_external_benchmark.py
 python -m unittest discover -s tests
 ```
 
@@ -86,9 +92,8 @@ method, coverage, and reproduction command.
 
 ## Roadmap
 
-The next steps estimate conditional RISP and LIPS effects jointly and compare
-the resulting measures with external benchmarks. See the [roadmap](docs/roadmap.md)
-for the planned work and optional extensions.
+Joint RISP–LIPS index development is deferred until the external benchmark
+results have been reviewed. See the [roadmap](docs/roadmap.md) for details.
 
 ## Data Sources and Attribution
 

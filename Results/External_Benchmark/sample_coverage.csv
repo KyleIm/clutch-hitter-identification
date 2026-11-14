@@ -1,0 +1,5 @@
+min_pa,matched_ids,complete,pa_discrepancies,missing_score_risp,missing_score_lips,missing_rate_difference_risp,missing_rate_difference_lips,missing_period_clutch_estimate,missing_period_wpa
+0,5716,4010,169,834,1624,834,1624,54,0
+1000,1343,1343,144,0,0,0,0,0,0
+2000,861,861,119,0,0,0,0,0,0
+3000,595,595,96,0,0,0,0,0,0
