@@ -103,6 +103,23 @@ R² = 0.201 in sample. Five-fold validation yielded r = 0.443 and R² =
 0.197, compared with R² = 0.123 for LIPS alone.
 [Regression extension](docs/analysis/02_external_benchmark.md#regression-extension)
 
+### Weighted baseline
+
+The original and weighted analyses use 4,569,453 and 5,019,958 eligible
+trials, respectively. Across the league, pooled RISP ON-minus-OFF changes from
+−0.00343 in hit rate to +0.00260 in weighted production, while the LIPS
+comparison remains negative. Across all three cutoffs, wRISP averages
+slightly above zero and wLIPS averages below zero.
+
+| At least 2,000 PA (861 hitters) | Binomial mean (SD) | Weighted mean (SD) |
+|---|---:|---:|
+| RISP | −0.212 (1.051) | +0.102 (1.051) |
+| LIPS | −0.989 (1.079) | −1.009 (1.083) |
+
+![Original and weighted RISP scores](Results/Weighted_ON_OFF/Baseline/figures/risp_comparison.png)
+
+![Original and weighted LIPS scores](Results/Weighted_ON_OFF/Baseline/figures/lips_comparison.png)
+
 ## Analysis
 
 | Analysis | Description | Status |
@@ -112,6 +129,7 @@ R² = 0.201 in sample. Five-fold validation yielded r = 0.443 and R² =
 | [Step 2](docs/analysis/02_external_benchmark.md) | Baseball-Reference Clutch and WPA benchmark | Completed |
 | [Step 3.1](docs/analysis/03_weighted_on_off.md) | Fixed weights and weighted ON/OFF batting production | Completed |
 | [Step 3.2](docs/analysis/03_2_weighted_validation.md) | Weighted multinomial likelihood and calibration | Completed |
+| [Step 3.3](docs/analysis/03_3_weighted_baseline.md) | Weighted baseline and cutoff sensitivity | Completed |
 
 ## Reproduction
 
@@ -125,6 +143,7 @@ python Script/analyze_external_benchmark.py
 python Script/analyze_clutch_regression.py
 python Script/prepare_weighted_on_off.py
 python Script/validate_weighted_on_off.py --simulations 10000
+python Script/analyze_weighted_baseline.py
 python -m unittest discover -s tests
 ```
 
@@ -146,7 +165,8 @@ method, coverage, and reproduction command.
 ├── Script/
 │   ├── prepare_weighted_on_off.py
 │   ├── multinomial_on_off.py
-│   └── validate_weighted_on_off.py
+│   ├── validate_weighted_on_off.py
+│   └── analyze_weighted_baseline.py
 ├── Results/
 │   ├── RISP_LIPS/
 │   ├── External_Benchmark/
@@ -155,7 +175,8 @@ method, coverage, and reproduction command.
 │       ├── risp_player_counts.csv
 │       ├── lips_player_counts.csv
 │       ├── coverage.csv
-│       └── Validation/
+│       ├── Validation/
+│       └── Baseline/
 ├── docs/
 │   ├── methodology/
 │   │   ├── binomial_on_off.md
@@ -165,15 +186,16 @@ method, coverage, and reproduction command.
 │   │   ├── 01_risp_lips_correlation.md
 │   │   ├── 02_external_benchmark.md
 │   │   ├── 03_weighted_on_off.md
-│   │   └── 03_2_weighted_validation.md
+│   │   ├── 03_2_weighted_validation.md
+│   │   └── 03_3_weighted_baseline.md
 │   └── roadmap.md
 └── tests/
 ```
 
 ## Roadmap
 
-Step 3.2 validates the weighted statistic. The weighted baseline and
-external benchmark comparison are planned. [Roadmap](docs/roadmap.md)
+Step 3.3 establishes the weighted baseline. External benchmark comparison
+is planned. [Roadmap](docs/roadmap.md)
 
 ## Data Sources and Attribution
 

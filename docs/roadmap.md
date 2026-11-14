@@ -7,9 +7,9 @@
 
 [Step 3.1](analysis/03_weighted_on_off.md) established the fixed weights and
 outcome counts. [Step 3.2](analysis/03_2_weighted_validation.md) derived and
-validated the signed multinomial likelihood ratio. Later steps will
-analyze the weighted baseline and evaluate it against Baseball-Reference
-Clutch.
+validated the signed multinomial likelihood ratio.
+[Step 3.3](analysis/03_3_weighted_baseline.md) establishes the weighted
+baseline. Evaluation against Baseball-Reference Clutch is planned.
 
 ### Deferred Joint RISP–LIPS Index
 
