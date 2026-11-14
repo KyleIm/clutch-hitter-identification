@@ -55,7 +55,7 @@ R² = 0.201 in sample. Five-fold validation yielded r = 0.443 and R² =
 | [Baseline Analysis](docs/analysis/00_baseline_analysis.md) | Binomial ON/OFF statistics and significance distributions | Completed |
 | [Step 1](docs/analysis/01_risp_lips_correlation.md) | RISP–LIPS EDA, correlation analysis, and hypothesis testing | Completed |
 | [Step 2](docs/analysis/02_external_benchmark.md) | Baseball-Reference Clutch and WPA benchmark | Completed |
-| [Step 3](docs/roadmap.md#step-3-joint-risplips-index-development) | Joint RISP–LIPS index development | Deferred |
+| [Step 3.1](docs/analysis/03_weighted_on_off.md) | Weighted ON/OFF outcome preparation and weight calibration | Counts ready, weights pending |
 
 ## Reproduction
 
@@ -67,6 +67,7 @@ python -m pip install -r requirements.txt
 python Script/analyze_risp_lips.py
 python Script/analyze_external_benchmark.py
 python Script/analyze_clutch_regression.py
+python Script/prepare_weighted_on_off.py
 python -m unittest discover -s tests
 ```
 
@@ -101,8 +102,11 @@ method, coverage, and reproduction command.
 
 ## Roadmap
 
-Joint RISP–LIPS index development is deferred until the external benchmark
-results have been reviewed. See the [roadmap](docs/roadmap.md) for details.
+Step 3 develops weighted batting production for RISP and LIPS. The framework
+uses fixed outcome weights across 1998–2025, so a home run in 1998 will
+receive the same weight as one in 2025 regardless of the offensive environment.
+Outcome counts are available while source coefficients remain pending.
+[Step 3.1 methodology](docs/analysis/03_weighted_on_off.md) · [Roadmap](docs/roadmap.md)
 
 ## Data Sources and Attribution
 
