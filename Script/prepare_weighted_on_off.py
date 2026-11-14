@@ -17,7 +17,11 @@ EVENTS = {
     "intent_walk": "excluded", "sac_bunt": "excluded", "catcher_interf": "excluded",
 }
 OUTCOMES = list(dict.fromkeys(EVENTS.values()))
-ELIGIBLE = [outcome for outcome in OUTCOMES if outcome != "excluded"]
+WEIGHTS = pd.Series({
+    "zero": 0.00, "ubb": 0.70, "hbp": 0.70, "single": 0.90,
+    "double": 1.25, "triple": 1.60, "home_run": 2.00,
+}, name="weight")
+ELIGIBLE = WEIGHTS.index.tolist()
 
 
 def classify(events):
@@ -27,32 +31,13 @@ def classify(events):
     return labels
 
 
-def load_weights(path):
-    """Accept a documented representative row or apply equal league-season weights."""
-    frame = pd.read_csv(path)
-    if frame.source_url.isna().any() or not frame.source_url.str.startswith("https://").all():
-        raise ValueError("Each weight row needs a source URL")
-    expected = {(year, league) for year in range(1998, 2026) for league in ("AL", "NL")}
-    fixed = len(frame) == 1 and frame.kind.eq("representative_1998_2025").all()
-    if not fixed and (
-        not frame.kind.eq("league_season").all()
-        or len(frame) != len(expected)
-        or set(zip(frame.season, frame.league)) != expected
-    ):
-        raise ValueError("Supply one documented representative row or all 56 AL/NL league-seasons")
-    numeric = frame[ELIGIBLE].apply(pd.to_numeric)
-    if not np.isfinite(numeric).all().all() or not numeric.zero.eq(0).all():
-        raise ValueError("Weights must be finite and zero outcomes must have weight zero")
-    if not numeric.drop(columns="zero").gt(0).all().all():
-        raise ValueError("Production weights must be positive")
-    return numeric.mean()
+def weighted_mean(counts):
+    eligible = counts[ELIGIBLE].sum(axis=1)
+    return counts[ELIGIBLE].dot(WEIGHTS).div(eligible.where(eligible.gt(0)))
 
 
-def prepare(out, weights_path):
+def prepare(out):
     out.mkdir(parents=True, exist_ok=True)
-    if weights_path is None and (out / "fixed_weights.csv").exists():
-        raise ValueError("Use a fresh output directory for a run without weights")
-    weights = load_weights(weights_path) if weights_path else None
     season_parts = {"risp": [], "lips": []}
     columns = ["batter", "events", RUNNER_COLUMN, "runner_situation_start",
                "inning", "bat_score", "fld_score"]
@@ -85,10 +70,7 @@ def prepare(out, weights_path):
             eligible = side_counts[ELIGIBLE].sum(axis=1)
             output = output.join(side_counts.add_prefix(f"{side}_"))
             output[f"{side}_eligible"] = eligible
-            output[f"{side}_weighted_mean"] = (
-                side_counts[ELIGIBLE].dot(weights).div(eligible.where(eligible.gt(0)))
-                if weights is not None else np.nan
-            )
+            output[f"{side}_weighted_mean"] = weighted_mean(side_counts)
         np.testing.assert_array_equal(
             output[["on_eligible", "off_eligible", "on_excluded", "off_excluded"]].sum(axis=1),
             output.total_pa,
@@ -104,16 +86,14 @@ def prepare(out, weights_path):
               output.on_eligible.sum() + output.off_eligible.sum(),
               "excluded PA", output.on_excluded.sum() + output.off_excluded.sum())
     pd.DataFrame(coverage).to_csv(out / "coverage.csv", index=False)
-    if weights is not None:
-        weights.rename_axis("outcome").rename("weight").to_csv(out / "fixed_weights.csv")
+    WEIGHTS.rename_axis("outcome").to_csv(out / "fixed_weights.csv", float_format="%.2f")
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output-dir", type=Path, default=RESULTS)
-    parser.add_argument("--weights", type=Path, help="Documented coefficient CSV")
     args = parser.parse_args()
-    prepare(args.output_dir, args.weights)
+    prepare(args.output_dir)
 
 
 if __name__ == "__main__":

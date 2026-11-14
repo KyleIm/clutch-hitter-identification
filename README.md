@@ -22,6 +22,53 @@ two-proportion likelihood-ratio G statistic, with the sign of the ON-minus-OFF
 hit-rate difference. It uses the astrophysical ON/OFF comparison with a
 binomial likelihood for hits and failures. See the [mathematical derivation](docs/methodology/binomial_on_off.md).
 
+### Weighted ON/OFF framework
+
+The original binomial model gives every hit a value of 1 and excludes
+walks and hit-by-pitches. The weighted framework includes unintentional
+walks and hit-by-pitches and gives each hit type its own weight.
+
+A representative set of Baseball-Reference batting outcome weights for
+1998–2025 could not be obtained. The study adopts the fixed weights from
+FanGraphs Basic wOBA and retains Baseball-Reference Clutch as the external
+benchmark.
+
+| Batting outcome | Original binomial weight | New fixed weight |
+|---|---:|---:|
+| Out / ROE | 0 | 0.00 |
+| Unintentional BB | Excluded | 0.70 |
+| HBP | Excluded | 0.70 |
+| Single | 1 | 0.90 |
+| Double | 1 | 1.25 |
+| Triple | 1 | 1.60 |
+| Home run | 1 | 2.00 |
+
+Jeff Zimmerman (2015), [Basic wOBA Equation](https://blogs.fangraphs.com/instagraphs/basic-woba-equation/), FanGraphs, May 14, 2015.
+Zimmerman reported R² = 0.986 between Basic wOBA and actual wOBA for
+players with more than 200 plate appearances since 1980, supporting the
+use of fixed coefficients across seasons.
+
+The framework adapts Basic wOBA by using its published coefficients with
+the project's own eligible PA definition. Intentional walks, sacrifice
+bunts, and catcher interference are excluded. Sacrifice flies and
+reaching on error count as zero. All singles receive the published
+single weight of 0.90.
+
+For each ON or OFF sample, weighted batting production is
+
+```text
+μ = Σᵢ wᵢpᵢ = (Σᵢ wᵢNᵢ)/T
+```
+
+Here `Nᵢ` is the outcome count, `T` is the total number of eligible trials,
+and `pᵢ = Nᵢ/T`. The raw weighted difference is `μ_ON − μ_OFF`. A group
+with zero eligible trials has an undefined mean.
+
+The fixed-weight framework assigns identical values to equivalent batting
+outcomes across all seasons. A home run in 1998 and one in 2025 both receive
+a weight of 2.00 regardless of differences in the offensive environment.
+[Step 3.1 methodology](docs/analysis/03_weighted_on_off.md)
+
 ## Key Findings
 
 LIPS scores shifted lower than RISP scores at all three PA cutoffs. The signed
@@ -55,7 +102,7 @@ R² = 0.201 in sample. Five-fold validation yielded r = 0.443 and R² =
 | [Baseline Analysis](docs/analysis/00_baseline_analysis.md) | Binomial ON/OFF statistics and significance distributions | Completed |
 | [Step 1](docs/analysis/01_risp_lips_correlation.md) | RISP–LIPS EDA, correlation analysis, and hypothesis testing | Completed |
 | [Step 2](docs/analysis/02_external_benchmark.md) | Baseball-Reference Clutch and WPA benchmark | Completed |
-| [Step 3.1](docs/analysis/03_weighted_on_off.md) | Weighted ON/OFF outcome preparation and weight calibration | Counts ready, weights pending |
+| [Step 3.1](docs/analysis/03_weighted_on_off.md) | Fixed weights and weighted ON/OFF batting production | Completed |
 
 ## Reproduction
 
@@ -87,26 +134,30 @@ method, coverage, and reproduction command.
 ├── AGENTS.md
 ├── Data/
 ├── Script/
+│   └── prepare_weighted_on_off.py
 ├── Results/
 │   ├── RISP_LIPS/
-│   └── External_Benchmark/
+│   ├── External_Benchmark/
+│   └── Weighted_ON_OFF/
+│       ├── fixed_weights.csv
+│       ├── risp_player_counts.csv
+│       ├── lips_player_counts.csv
+│       └── coverage.csv
 ├── docs/
 │   ├── methodology/binomial_on_off.md
 │   ├── analysis/
 │   │   ├── 00_baseline_analysis.md
 │   │   ├── 01_risp_lips_correlation.md
-│   │   └── 02_external_benchmark.md
+│   │   ├── 02_external_benchmark.md
+│   │   └── 03_weighted_on_off.md
 │   └── roadmap.md
 └── tests/
 ```
 
 ## Roadmap
 
-Step 3 develops weighted batting production for RISP and LIPS. The framework
-uses fixed outcome weights across 1998–2025, so a home run in 1998 will
-receive the same weight as one in 2025 regardless of the offensive environment.
-Outcome counts are available while source coefficients remain pending.
-[Step 3.1 methodology](docs/analysis/03_weighted_on_off.md) · [Roadmap](docs/roadmap.md)
+Step 3.1 applies fixed weights to RISP and LIPS batting production. A
+subsequent step will specify the weighted ON/OFF statistic. [Roadmap](docs/roadmap.md)
 
 ## Data Sources and Attribution
 

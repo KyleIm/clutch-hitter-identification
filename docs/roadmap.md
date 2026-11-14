@@ -5,11 +5,10 @@
 
 ## Step 3: Weighted ON/OFF Framework
 
-[Step 3.1](analysis/03_weighted_on_off.md) prepares seven-category outcome
-counts for RISP and LIPS. Select a documented representative weight set or
-average the matching AL and NL season coefficients once they are available.
-Specify the weighted ON/OFF statistic in a subsequent step, then evaluate
-wRISP and wLIPS against the Baseball-Reference benchmark.
+[Step 3.1](analysis/03_weighted_on_off.md) is complete. The seven-category
+counts and weighted production means use fixed FanGraphs Basic wOBA
+coefficients. A subsequent step will specify the weighted ON/OFF
+statistic before evaluation against Baseball-Reference Clutch.
 
 ### Deferred Joint RISP–LIPS Index
 

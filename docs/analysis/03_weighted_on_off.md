@@ -1,27 +1,50 @@
 # Step 3.1 — Weighted ON/OFF preparation
 
-## Weight sources and coverage
+## Fixed batting outcome weights
 
-Baseball-Reference describes league-season rOBA coefficients and adjustments
-for pitcher batting, reaching on error, and infield versus outfield hits.
-Its worked example gives basic MLB wOBA coefficients for 2010. The example
-covers one season and uses a different model from rOBA. The reviewed
-documentation and public data listings did not provide a fixed set for
-1998–2025 or a complete table of 56 AL/NL league-season coefficients.
-[Baseball-Reference wRAA methodology](https://www.baseball-reference.com/about/war_explained_wraa.shtml) ·
-[Baseball-Reference position player WAR methodology](https://www.baseball-reference.com/about/war_explained_position.shtml)
+The original binomial model gives every hit a value of 1 and excludes
+walks and hit-by-pitches. The weighted framework includes unintentional
+walks and hit-by-pitches and gives each hit type its own weight.
 
-The source audit records the published example and the zero-outcome rule.
-The production weights remain pending. The output leaves weighted means
-and differences blank until a documented coefficient set is available.
-For annual inputs, the script takes the arithmetic mean of each outcome
-coefficient across the 56 AL/NL league-seasons, giving each equal weight.
-The supplied single coefficient should represent aggregate singles.
+A representative set of Baseball-Reference batting outcome weights for
+1998–2025 could not be obtained. The study adopts the fixed weights from
+FanGraphs Basic wOBA and retains Baseball-Reference Clutch as the external
+benchmark.
 
-The weighted framework uses fixed batting outcome weights across the
-entire 1998–2025 analysis period. A home run in 1998 receives the same
-weight as one in 2025 regardless of the offensive environment.
-The numerical home-run weight remains pending.
+| Batting outcome | Original binomial weight | New fixed weight |
+|---|---:|---:|
+| Out / ROE | 0 | 0.00 |
+| Unintentional BB | Excluded | 0.70 |
+| HBP | Excluded | 0.70 |
+| Single | 1 | 0.90 |
+| Double | 1 | 1.25 |
+| Triple | 1 | 1.60 |
+| Home run | 1 | 2.00 |
+
+Jeff Zimmerman (2015), [Basic wOBA Equation](https://blogs.fangraphs.com/instagraphs/basic-woba-equation/), FanGraphs, May 14, 2015.
+Zimmerman reported R² = 0.986 between Basic wOBA and actual wOBA for
+players with more than 200 plate appearances since 1980, supporting the
+use of fixed coefficients across seasons.
+
+The framework adapts Basic wOBA by using its published coefficients with
+the project's own eligible PA definition. Intentional walks, sacrifice
+bunts, and catcher interference are excluded. Sacrifice flies and
+reaching on error count as zero. All singles receive the published
+single weight of 0.90.
+
+For each ON or OFF sample, weighted batting production is
+
+```text
+μ = Σᵢ wᵢpᵢ = (Σᵢ wᵢNᵢ)/T
+```
+
+Here `Nᵢ` is the outcome count, `T` is the total number of eligible trials,
+and `pᵢ = Nᵢ/T`. The raw weighted difference is `μ_ON − μ_OFF`. A group
+with zero eligible trials has an undefined mean.
+
+The fixed-weight framework assigns identical values to equivalent batting
+outcomes across all seasons. A home run in 1998 and one in 2025 both receive
+a weight of 2.00 regardless of differences in the offensive environment.
 
 ## Retrosheet outcomes
 
@@ -41,14 +64,10 @@ seven category counts sum to eligible trials for each ON/OFF group.
 The eligible trials and exclusions reconcile to total PA. Removing
 unintentional walks and hit-by-pitches recovers the prior binomial trial
 counts and the four hit categories reproduce the original success totals.
-With coefficients supplied, each side's weighted mean is its sum of
-weighted category counts divided by eligible trials. The raw difference
-subtracts the OFF mean from the ON mean.
-
 ## Coverage
 
 The 28 seasons contain 5,019,958 eligible PA and 63,701 excluded PA in
-each comparison. Both groups have eligible trials for 4,915 of 5,716
+each comparison. Weighted differences are available for 4,915 of 5,716
 players in RISP and 4,113 in LIPS. Every hitter at 1,000, 2,000 and 3,000
 PA has eligible trials on both sides in both comparisons
 (1,343, 861 and 595 hitters, respectively).
@@ -56,7 +75,7 @@ PA has eligible trials on both sides in both comparisons
 - [RISP counts](../../Results/Weighted_ON_OFF/risp_player_counts.csv)
 - [LIPS counts](../../Results/Weighted_ON_OFF/lips_player_counts.csv)
 - [Coverage by cutoff](../../Results/Weighted_ON_OFF/coverage.csv)
-- [Source audit](../../Results/Weighted_ON_OFF/weight_source_audit.csv)
+- [Fixed weights](../../Results/Weighted_ON_OFF/fixed_weights.csv)
 
 ## Reproduction
 
@@ -65,7 +84,5 @@ python Script/prepare_weighted_on_off.py
 python -m unittest discover -s tests
 ```
 
-The optional `--weights` CSV takes `kind,season,league,source_url,zero,ubb,hbp,single,double,triple,home_run`.
-Use one `representative_1998_2025` row with a verified representative
-source, or 56 `league_season` rows covering 1998–2025 for both AL and NL.
-A weighted run also writes `fixed_weights.csv`.
+The script applies the fixed coefficients and writes the weights, player counts,
+weighted means and differences, and coverage to the results directory.
