@@ -61,6 +61,11 @@ python -m unittest discover -s tests
 The script uses the included data. See the [baseline reproduction commands](docs/analysis/00_baseline_analysis.md#reproduction)
 to rebuild the marginal summaries and histograms.
 
+The Baseball-Reference benchmark sums published season WPA and estimates
+period Clutch from season Win Probability statistics over 1998–2025.
+See the [data README](Data/BaseballReference/README.md) for the aggregation
+method, coverage, and reproduction command.
+
 ## Repository Structure
 
 ```text

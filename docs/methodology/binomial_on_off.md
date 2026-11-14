@@ -39,14 +39,16 @@ Analogously to the exposure ratio in Li-Ma, define:
 alpha = T_on / T_off
 ```
 
-For a RISP-based baseball analysis, one possible mapping is:
+For a RISP-based baseball analysis, `T_RISP` and `T_nonRISP` count
+eligible batting trials. Sacrifice flies count as failures, so these
+denominators differ from official at-bats.
 
 ```text
 N_on  = H_RISP
-T_on  = AB_RISP
+T_on  = T_RISP
 N_off = H_nonRISP
-T_off = AB_nonRISP
-alpha = AB_RISP / AB_nonRISP
+T_off = T_nonRISP
+alpha = T_RISP / T_nonRISP
 ```
 
 Unlike the original Poisson Li-Ma problem, the absolute trial counts
@@ -257,17 +259,17 @@ For a simple hit/non-hit RISP analysis:
 
 ```text
 N_on  = H_RISP
-T_on  = AB_RISP
+T_on  = T_RISP
 N_off = H_nonRISP
-T_off = AB_nonRISP
+T_off = T_nonRISP
 ```
 
 The estimated success probabilities are:
 
 ```text
-p_RISP_hat    = H_RISP / AB_RISP
-p_nonRISP_hat = H_nonRISP / AB_nonRISP
-p0_hat        = (H_RISP + H_nonRISP) / (AB_RISP + AB_nonRISP)
+p_RISP_hat    = H_RISP / T_RISP
+p_nonRISP_hat = H_nonRISP / T_nonRISP
+p0_hat        = (H_RISP + H_nonRISP) / (T_RISP + T_nonRISP)
 ```
 
 The player-level statistic is therefore:

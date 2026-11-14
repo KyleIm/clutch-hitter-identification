@@ -64,7 +64,7 @@ Retrosheet ID. The extremes table lists five players per tail and metric, and
 the five largest signed score gaps in each direction. Score gaps are descriptive
 and can reflect different marginal trial counts and league baselines.
 
-score measures evidence for a rate difference, while the raw difference
+The signed score measures evidence for a rate difference, while the raw difference
 measures its size. The two sets of coefficients were near zero at all
 three cutoffs.
 
