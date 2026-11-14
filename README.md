@@ -43,6 +43,11 @@ RISP and 0.354 for LIPS. The one-sided Williams test gave p = 0.041, and
 the two-sided bootstrap 95% interval for the difference was [−0.013, 0.167].
 [Step 2 results](docs/analysis/02_external_benchmark.md)
 
+At 2,000 PA, combining RISP and LIPS yielded Pearson r = 0.448 and
+R² = 0.201 in sample. Five-fold validation yielded r = 0.443 and R² =
+0.197, compared with R² = 0.123 for LIPS alone.
+[Regression extension](docs/analysis/02_external_benchmark.md#regression-extension)
+
 ## Analysis
 
 | Analysis | Description | Status |
@@ -61,6 +66,7 @@ From the repository root, create a virtual environment with
 python -m pip install -r requirements.txt
 python Script/analyze_risp_lips.py
 python Script/analyze_external_benchmark.py
+python Script/analyze_clutch_regression.py
 python -m unittest discover -s tests
 ```
 
@@ -80,12 +86,15 @@ method, coverage, and reproduction command.
 ├── AGENTS.md
 ├── Data/
 ├── Script/
-├── Results/RISP_LIPS/
+├── Results/
+│   ├── RISP_LIPS/
+│   └── External_Benchmark/
 ├── docs/
 │   ├── methodology/binomial_on_off.md
 │   ├── analysis/
 │   │   ├── 00_baseline_analysis.md
-│   │   └── 01_risp_lips_correlation.md
+│   │   ├── 01_risp_lips_correlation.md
+│   │   └── 02_external_benchmark.md
 │   └── roadmap.md
 └── tests/
 ```

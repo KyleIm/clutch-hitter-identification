@@ -116,3 +116,90 @@ Run from the repository root with the dependencies in requirements.txt.
 python Script/analyze_external_benchmark.py --bootstrap 10000 --seed 20261114
 python -m unittest discover -s tests
 ```
+
+## Regression extension
+
+### Models and evaluation
+
+Fit intercept-bearing OLS models for the reconstructed Baseball-Reference
+Clutch target with RISP alone, LIPS alone, and both signed scores. Use the
+same complete samples of 1,343, 861, and 595 hitters as above. Standardized
+slopes are the fitted slopes multiplied by the predictor SD and divided by
+the target SD. Coefficient tests and 95% intervals use HC3 standard errors
+and a t reference with residual degrees of freedom. The nested comparisons
+test the added slope using its squared HC3 t statistic as a one-restriction
+Wald F statistic and report the change in R².
+[HC3 covariance definition](https://www.statsmodels.org/stable/generated/statsmodels.stats.sandwich_covariance.cov_hc3.html)
+
+At each cutoff, sort by batter ID and shuffle players using NumPy's default
+random generator with seed 20261114. Split that permutation into five
+near-equal folds. All three models share the splits and each held-out
+prediction uses coefficients fitted on the other four folds. Pooled
+out-of-fold R² uses the overall held-out outcomes' mean as its reference.
+Fold R² uses each fold's own outcome mean. The fold mean and sample SD
+describe variation across folds.
+
+### Primary sample results
+
+| Model | Intercept | RISP slope | LIPS slope | In-sample Pearson | In-sample R² | OOF Pearson | OOF Spearman | OOF R² | OOF RMSE | OOF MAE |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| RISP | −0.956 | 0.735 | | 0.276 | 0.076 | 0.271 | 0.254 | 0.074 | 2.689 | 2.097 |
+| LIPS | −0.206 | | 0.916 | 0.354 | 0.125 | 0.350 | 0.356 | 0.123 | 2.616 | 2.034 |
+| Combined | −0.054 | 0.731 | 0.913 | 0.448 | 0.201 | 0.443 | 0.448 | 0.197 | 2.504 | 1.946 |
+
+The combined standardized slopes are 0.275 for RISP and 0.352 for LIPS.
+Both added slopes contribute conditional information about Clutch.
+Adding RISP to LIPS increases in-sample R² by 0.076 (HC3 Wald F = 68.59,
+p = 4.63 × 10⁻¹⁶). Adding LIPS to RISP increases it by 0.124 (F = 128.86,
+p = 6.37 × 10⁻²⁸). The correlation identity in the specification gives
+R² = 0.2005358641 using unrounded observed correlations. The fitted R²
+agrees within 5 × 10⁻¹⁶ across the three cutoffs.
+
+| Primary-sample improvement vs. | In-sample Pearson gain | In-sample R² gain | OOF Pearson gain | OOF R² gain |
+|---|---:|---:|---:|---:|
+| RISP only | +0.171 (62.1%) | +0.124 (162.6%) | +0.172 (63.4%) | +0.123 (167.1%) |
+| LIPS only | +0.094 (26.7%) | +0.076 (60.4%) | +0.093 (26.6%) | +0.074 (60.2%) |
+
+The combined model also leads both single-score fits at the alternate
+cutoffs. Its pooled R² is 0.194 at 1,000 PA and 0.211 at 3,000 PA.
+[Coefficients](../../Results/External_Benchmark/Regression/coefficients.csv) ·
+[Performance and fold summaries](../../Results/External_Benchmark/Regression/performance.csv) ·
+[Individual folds](../../Results/External_Benchmark/Regression/cv_folds.csv) ·
+[Nested comparisons](../../Results/External_Benchmark/Regression/nested_comparisons.csv) ·
+[R² identity](../../Results/External_Benchmark/Regression/analytical_verification.csv) ·
+[Player predictions](../../Results/External_Benchmark/Regression/predictions.csv)
+
+![Fitted versus observed Clutch](../../Results/External_Benchmark/Regression/figures/fitted_scatter.png)
+
+![Held-out predictions versus observed Clutch](../../Results/External_Benchmark/Regression/figures/out_of_fold_scatter.png)
+
+![Model performance by PA cutoff](../../Results/External_Benchmark/Regression/figures/performance_comparison.png)
+
+### Diagnostics and interpretation
+
+The combined model's Koenker test against variance related to the two
+predictors gives p = 0.019 at 1,000 PA and p = 0.612 and 0.680 at the
+higher cutoffs. At 2,000 PA, mean residuals across fitted-value deciles
+range from −0.399 to 0.517. The 3,000 PA sample has a wider decile mean
+range of −0.864 to 0.614, suggesting some calibration variation across
+the fitted range. At 2,000 PA, 56 hitters exceed the descriptive Cook's
+distance threshold 4/n. Adrián Beltré has the largest distance (0.030).
+All observations are retained.
+[Diagnostic summary](../../Results/External_Benchmark/Regression/diagnostic_summary.csv) ·
+[Player diagnostics](../../Results/External_Benchmark/Regression/diagnostics.csv)
+
+![Combined model residuals, normal Q–Q and influence plots](../../Results/External_Benchmark/Regression/figures/combined_diagnostics.png)
+
+Two situational hit-rate scores give a moderate positive association
+with the reconstructed Clutch target without using WPA or leverage as
+predictors. The model explains about 20% of the variation in observed
+Clutch and leaves about 80% unexplained. This is a supervised approximation
+to a target reconstructed from rounded season-level statistics. Its scope
+is held-out players' historical Clutch in the same period. Future performance,
+persistent clutch ability and statistical significance calibration require
+different evidence.
+
+```bash
+python Script/analyze_clutch_regression.py
+python -m unittest discover -s tests
+```
