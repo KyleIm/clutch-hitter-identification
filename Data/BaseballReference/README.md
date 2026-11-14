@@ -33,4 +33,9 @@ Save each season page as YEAR.html in a local directory. Use the [1998 Player Wi
 python Script/aggregate_bbref_wpa.py ../bref-seasons
 ```
 
-The script writes bbref_1998_2025_player_seasons.csv and bbref_1998_2025_wpa_matched.csv here by default. Both generated data files are local and excluded from Git pending verification of redistribution rights.
+## CSV files and attribution
+
+- [Player-season statistics](bbref_1998_2025_player_seasons.csv) contain selected fields from the Baseball-Reference Player Win Probability tables for the 1998–2025 MLB regular seasons, retrieved November 13, 2026. Source links follow the same pattern for each season. [1998 source table](https://www.baseball-reference.com/leagues/majors/1998-win_probability-batting.shtml#players_win_probability_batting) · [2025 source table](https://www.baseball-reference.com/leagues/majors/2025-win_probability-batting.shtml#players_win_probability_batting)
+- [Matched period statistics](bbref_1998_2025_wpa_matched.csv) combine those Baseball-Reference season values with Retrosheet plate appearance counts and Chadwick player IDs. Period WPA is a sum of published season values. Period Clutch is estimated as described above.
+
+Baseball-Reference is published by Sports Reference LLC. Consult its terms for further reuse. [Sports Reference Terms of Use](https://www.sports-reference.com/termsofuse.html)
