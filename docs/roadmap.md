@@ -9,7 +9,8 @@
 outcome counts. [Step 3.2](analysis/03_2_weighted_validation.md) derived and
 validated the signed multinomial likelihood ratio.
 [Step 3.3](analysis/03_3_weighted_baseline.md) establishes the weighted
-baseline. Evaluation against Baseball-Reference Clutch is planned.
+baseline. [Step 3.4](analysis/03_4_weighted_benchmark.md) compares both
+score families against Baseball-Reference Clutch on identical validation folds.
 
 ### Deferred Joint RISP–LIPS Index
 

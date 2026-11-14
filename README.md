@@ -120,6 +120,25 @@ slightly above zero and wLIPS averages below zero.
 
 ![Original and weighted LIPS scores](Results/Weighted_ON_OFF/Baseline/figures/lips_comparison.png)
 
+### Weighted external benchmark
+
+At 2,000 PA, the weighted combined model raised pooled CV R² from
+0.197 to 0.249, a difference of 0.053 (paired bootstrap 95% interval
+[0.028, 0.078]). CV RMSE fell from 2.504 to 2.420. The weighted scores
+remain nearly uncorrelated with each other (Pearson r = 0.016).
+[Step 3.4 methodology and results](docs/analysis/03_4_weighted_benchmark.md)
+
+| Model | In-sample Pearson r | In-sample R² | CV Pearson r | CV R² | CV RMSE | CV MAE |
+|---|---:|---:|---:|---:|---:|---:|
+| RISP | 0.276 | 0.076 | 0.271 | 0.074 | 2.689 | 2.097 |
+| LIPS | 0.354 | 0.125 | 0.350 | 0.123 | 2.616 | 2.034 |
+| RISP + LIPS | 0.448 | 0.201 | 0.443 | 0.197 | 2.504 | 1.946 |
+| wRISP | 0.308 | 0.095 | 0.304 | 0.092 | 2.661 | 2.071 |
+| wLIPS | 0.405 | 0.164 | 0.401 | 0.161 | 2.559 | 1.981 |
+| wRISP + wLIPS | 0.505 | 0.255 | 0.499 | 0.249 | 2.420 | 1.875 |
+
+![Cross-validated performance](Results/Weighted_ON_OFF/External_Benchmark/figures/cv_performance.png)
+
 ## Analysis
 
 | Analysis | Description | Status |
@@ -130,6 +149,7 @@ slightly above zero and wLIPS averages below zero.
 | [Step 3.1](docs/analysis/03_weighted_on_off.md) | Fixed weights and weighted ON/OFF batting production | Completed |
 | [Step 3.2](docs/analysis/03_2_weighted_validation.md) | Weighted multinomial likelihood and calibration | Completed |
 | [Step 3.3](docs/analysis/03_3_weighted_baseline.md) | Weighted baseline and cutoff sensitivity | Completed |
+| [Step 3.4](docs/analysis/03_4_weighted_benchmark.md) | Weighted external benchmark and regression | Completed |
 
 ## Reproduction
 
@@ -144,6 +164,7 @@ python Script/analyze_clutch_regression.py
 python Script/prepare_weighted_on_off.py
 python Script/validate_weighted_on_off.py --simulations 10000
 python Script/analyze_weighted_baseline.py
+python Script/analyze_weighted_benchmark.py --bootstrap 10000
 python -m unittest discover -s tests
 ```
 
@@ -166,7 +187,8 @@ method, coverage, and reproduction command.
 │   ├── prepare_weighted_on_off.py
 │   ├── multinomial_on_off.py
 │   ├── validate_weighted_on_off.py
-│   └── analyze_weighted_baseline.py
+│   ├── analyze_weighted_baseline.py
+│   └── analyze_weighted_benchmark.py
 ├── Results/
 │   ├── RISP_LIPS/
 │   ├── External_Benchmark/
@@ -176,7 +198,8 @@ method, coverage, and reproduction command.
 │       ├── lips_player_counts.csv
 │       ├── coverage.csv
 │       ├── Validation/
-│       └── Baseline/
+│       ├── Baseline/
+│       └── External_Benchmark/
 ├── docs/
 │   ├── methodology/
 │   │   ├── binomial_on_off.md
@@ -187,15 +210,16 @@ method, coverage, and reproduction command.
 │   │   ├── 02_external_benchmark.md
 │   │   ├── 03_weighted_on_off.md
 │   │   ├── 03_2_weighted_validation.md
-│   │   └── 03_3_weighted_baseline.md
+│   │   ├── 03_3_weighted_baseline.md
+│   │   └── 03_4_weighted_benchmark.md
 │   └── roadmap.md
 └── tests/
 ```
 
 ## Roadmap
 
-Step 3.3 establishes the weighted baseline. External benchmark comparison
-is planned. [Roadmap](docs/roadmap.md)
+Step 3.4 compares weighted and binomial models against Baseball-Reference
+Clutch. Joint index development remains deferred. [Roadmap](docs/roadmap.md)
 
 ## Data Sources and Attribution
 
