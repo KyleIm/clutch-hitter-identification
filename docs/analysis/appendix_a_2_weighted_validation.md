@@ -1,4 +1,4 @@
-# Step 3.2 — Weighted ON/OFF validation
+# Appendix A.2 — Weighted ON/OFF validation
 
 The weighted likelihood ratio compares weighted production means while
 allowing each group its own outcome distribution. See the
@@ -19,7 +19,7 @@ a known optimum with positive mass in an unobserved category.
 ## Monte Carlo calibration
 
 Seed 20261114 generated 10,000 independent ON/OFF count pairs per
-configuration. The realistic probabilities come from all eligible Step 3.1
+configuration. The realistic probabilities come from all eligible Appendix A.1
 Retrosheet trials pooled across both RISP groups. The 1:3 and 1:7 ON/OFF
 ratios approximate RISP and LIPS exposures. For the unequal-distribution
 null, the ON distribution replaces half its single probability with a

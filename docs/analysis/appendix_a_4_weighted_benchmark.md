@@ -1,11 +1,11 @@
-# Step 3.4 — Weighted external benchmark and regression
+# Appendix A.4 — Weighted external benchmark and regression
 
 The analysis joins all 5,716 hitters by Retrosheet batter ID and verifies
 the Baseball-Reference IDs, career PA and original signed scores. The
 1,000, 2,000 and 3,000 PA samples contain 1,343, 861 and 595 complete
-players. Each player's regenerated fold matches Step 2 using the same
+players. Each player's regenerated fold matches Step 3 using the same
 sorted order, NumPy seed 20261114, and five shuffled folds. Original
-fitted and out-of-fold predictions match Step 2 within 1e-10.
+fitted and out-of-fold predictions match Step 3 within 1e-10.
 
 ## Correlations
 

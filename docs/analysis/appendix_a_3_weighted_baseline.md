@@ -1,9 +1,9 @@
-# Step 3.3 — Weighted baseline analysis
+# Appendix A.3 — Weighted baseline analysis
 
 ## Data and verification
 
-The analysis applies the fixed [Step 3.1 weights](03_weighted_on_off.md)
-and [Step 3.2 likelihood ratio](../methodology/multinomial_on_off.md) to
+The analysis applies the fixed [Appendix A.1 weights](appendix_a_1_weighted_on_off.md)
+and [Appendix A.2 likelihood ratio](../methodology/multinomial_on_off.md) to
 the existing 1998–2025 counts. Both output files retain all 5,716 hitters.
 Each player ID and PA total matched the Step 1 data. The seven outcome
 counts reproduce eligible trials and, with exclusions, reconcile to the
@@ -56,7 +56,7 @@ The displayed normal reference is the asymptotic null for an individual
 test under its assumptions. These distributions contain observed player
 performances, whose underlying situational production may differ.
 [Full score summaries](../../Results/Weighted_ON_OFF/Baseline/score_summary.csv) ·
-[Step 3.2 null calibration](03_2_weighted_validation.md)
+[Appendix A.2 null calibration](appendix_a_2_weighted_validation.md)
 
 ![Original and weighted RISP scores](../../Results/Weighted_ON_OFF/Baseline/figures/risp_comparison.png)
 

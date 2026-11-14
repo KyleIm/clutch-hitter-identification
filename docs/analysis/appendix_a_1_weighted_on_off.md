@@ -1,4 +1,4 @@
-# Step 3.1 — Weighted ON/OFF preparation
+# Appendix A.1 — Weighted ON/OFF preparation
 
 ## Fixed batting outcome weights
 

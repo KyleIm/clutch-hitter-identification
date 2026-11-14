@@ -1,9 +1,9 @@
-# Appendix A — Ruane BPS, raw differences, and ON/OFF scores
+# Appendix B — Ruane BPS, raw differences, and ON/OFF scores
 
-Appendix A compares 13 OLS models with intercepts against the 1998–2025
+Appendix B compares 13 OLS models with intercepts against the 1998–2025
 Baseball-Reference period Clutch estimate. The primary sample comprises the
 same 861 players with at least 2,000 Retrosheet PA as in
-[Step 3.4](03_4_weighted_benchmark.md). The 1,000 and 3,000 PA samples
+[Appendix A.4](appendix_a_4_weighted_benchmark.md). The 1,000 and 3,000 PA samples
 contain 1,343 and 595 players. Player IDs, outcomes and five validation
 folds match the previous analyses at every cutoff.
 
@@ -33,11 +33,11 @@ A2 (RISP), A3 (LIPS) and A4 (both) use raw ON-minus-OFF hit rates,
 with the same trials T as A1 and one unit per hit. A5 (RISP), A6 (LIPS)
 and A7 (both) use raw ON-minus-OFF weighted production, with eligible PA
 including unintentional walks and hit-by-pitches. They use the
-[Step 3.1 fixed weights](03_weighted_on_off.md). All differences require
+[Appendix A.1 fixed weights](appendix_a_1_weighted_on_off.md). All differences require
 eligible observations on both sides. The script checks the denominators
-and hit totals against Step 1 and the raw differences against Step 3.4.
+and hit totals against Step 1 and the raw differences against Appendix A.4.
 It refits B1–B3 and W1–W3 and checks their predictions and metrics against
-the published Step 3.4 files.
+the published Appendix A.4 files.
 
 ## Primary sample (PA ≥ 2,000)
 
@@ -149,7 +149,7 @@ From the repository root, using the dependencies in requirements.txt:
     python Script/analyze_appendix_benchmarks.py
     python -m unittest discover -s tests
 
-The script reads the tracked Step 1 through Step 3.4 results. Outputs
+The script reads the tracked Step 1, Step 3, and Appendix A results. Outputs
 include [player metrics](../../Results/Appendix_A/players.csv),
 [OLS estimates](../../Results/Appendix_A/coefficients.csv),
 and [predictions and fold IDs](../../Results/Appendix_A/predictions.csv).

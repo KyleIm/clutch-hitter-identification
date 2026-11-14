@@ -1,18 +1,19 @@
 # Roadmap
 
 - [Step 1 — RISP–LIPS correlation](analysis/01_risp_lips_correlation.md) is complete.
-- [Step 2 — Baseball-Reference external benchmark](analysis/02_external_benchmark.md) is complete.
+- [Step 2 — Bayesian binomial upper limits](analysis/02_upper_limit_analysis.md) is complete.
+- [Step 3 — Baseball-Reference external benchmark](analysis/03_external_benchmark.md) is complete.
 
-## Step 3: Weighted ON/OFF Framework
+## Appendix A — Weighted ON/OFF Framework
 
-[Step 3.1](analysis/03_weighted_on_off.md) established the fixed weights and
-outcome counts. [Step 3.2](analysis/03_2_weighted_validation.md) derived and
+[Appendix A.1](analysis/appendix_a_1_weighted_on_off.md) established the fixed weights and
+outcome counts. [Appendix A.2](analysis/appendix_a_2_weighted_validation.md) derived and
 validated the signed multinomial likelihood ratio.
-[Step 3.3](analysis/03_3_weighted_baseline.md) establishes the weighted
-baseline. [Step 3.4](analysis/03_4_weighted_benchmark.md) compares both
+[Appendix A.3](analysis/appendix_a_3_weighted_baseline.md) establishes the weighted
+baseline. [Appendix A.4](analysis/appendix_a_4_weighted_benchmark.md) compares both
 score families against Baseball-Reference Clutch on identical validation folds.
 
-[Appendix A](analysis/appendix_a_benchmark_comparison.md) completes the empirical
+[Appendix B](analysis/appendix_b_benchmark_comparison.md) completes the empirical
 analyses with the Ruane BPS and raw performance benchmarks.
 
 ### Deferred Joint RISP–LIPS Index
@@ -76,4 +77,3 @@ No final directional index has been selected or validated. Any proposed index mu
 - Examine league-adjusted situational baselines and how the pooled hit-rate gaps affect the score distributions.
 - Compare empirically standardized scores while preserving the distinction between relative scores and detection significance.
 - Assess leave-one-season-out sensitivity and study year-to-year repeatability as a separate question.
-- Estimate upper limits for player-specific effects after checking marginal calibration and league baselines.

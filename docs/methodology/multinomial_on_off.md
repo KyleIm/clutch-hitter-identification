@@ -8,7 +8,7 @@
 | Alternative | Separate hit probabilities | Separate outcome vectors |
 
 The eligibility and situation rules are defined in
-[Step 3.1](../analysis/03_weighted_on_off.md). See also the
+[Appendix A.1](../analysis/appendix_a_1_weighted_on_off.md). See also the
 [binomial derivation](binomial_on_off.md).
 
 For group g, let N_g,i count outcome i, let T_g = Σ_i N_g,i, and
@@ -98,4 +98,4 @@ Both probability sums and the null mean equality must be within 2e-9.
 The solver checks nonnegativity, positive mass at every observed outcome,
 convergence, and finite likelihood difference. Negative TS within 1e-8
 of zero is clipped. Other failures raise an explicit error. See
-[validation](../analysis/03_2_weighted_validation.md).
+[validation](../analysis/appendix_a_2_weighted_validation.md).

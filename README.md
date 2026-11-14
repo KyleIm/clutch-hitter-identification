@@ -22,6 +22,16 @@ two-proportion likelihood-ratio G statistic, with the sign of the ON-minus-OFF
 hit-rate difference. It uses the astrophysical ON/OFF comparison with a
 binomial likelihood for hits and failures. See the [mathematical derivation](docs/methodology/binomial_on_off.md).
 
+### Detection and upper limits
+
+The signed binomial ON/OFF score adapts the Li–Ma detection framework
+to situational hit rates. Step 2 adds a Zech-inspired Bayesian binomial
+upper limit on the ON-minus-OFF hit-rate difference. The 95% limit
+bounds the effect conditional on it being positive. The posterior
+probability of a positive effect is reported separately.
+[Derivation](docs/methodology/binomial_upper_limit.md) ·
+[Step 2 results](docs/analysis/02_upper_limit_analysis.md)
+
 ### Weighted ON/OFF framework
 
 The original binomial model gives every hit a value of 1 and excludes
@@ -67,7 +77,7 @@ with zero eligible trials has an undefined mean.
 The fixed-weight framework assigns identical values to equivalent batting
 outcomes across all seasons. A home run in 1998 and one in 2025 both receive
 a weight of 2.00 regardless of differences in the offensive environment.
-[Step 3.1 methodology](docs/analysis/03_weighted_on_off.md)
+[Appendix A.1 methodology](docs/analysis/appendix_a_1_weighted_on_off.md)
 
 The binomial statistic compares hit probabilities. The weighted multinomial
 statistic compares weighted production means across seven outcomes and allows
@@ -75,7 +85,7 @@ different ON and OFF distributions under the null. In 100,000 validation
 fits there were no optimizer failures. Nominal 5% rejection was 4.57–5.24%
 in the five realistic null configurations and 1.63% in the sparse case.
 [Multinomial derivation](docs/methodology/multinomial_on_off.md) ·
-[Step 3.2 validation](docs/analysis/03_2_weighted_validation.md)
+[Appendix A.2 validation](docs/analysis/appendix_a_2_weighted_validation.md)
 
 ## Key Findings
 
@@ -93,15 +103,25 @@ correlations fell within the central 95% null intervals.
 
 ![RISP and LIPS score distributions by career PA cutoff](Results/RISP_LIPS/figures/boxplot.png)
 
+### Bayesian upper limits
+
+At PA ≥ 2,000 and signed score S < 3, the median conditional 95%
+upper limit is 3.17 percentage points for RISP (859 players) and
+2.91 for LIPS (861 players). The limit complements the signed score
+by bounding the size of a positive effect under the model.
+[Upper-limit analysis](docs/analysis/02_upper_limit_analysis.md)
+
+### External benchmark
+
 Against Baseball-Reference Clutch at 2,000 PA, Pearson r was 0.276 for
 RISP and 0.354 for LIPS. The one-sided Williams test gave p = 0.041, and
 the two-sided bootstrap 95% interval for the difference was [−0.013, 0.167].
-[Step 2 results](docs/analysis/02_external_benchmark.md)
+[Step 3 results](docs/analysis/03_external_benchmark.md)
 
 At 2,000 PA, combining RISP and LIPS yielded Pearson r = 0.448 and
 R² = 0.201 in sample. Five-fold validation yielded r = 0.443 and R² =
 0.197, compared with R² = 0.123 for LIPS alone.
-[Regression extension](docs/analysis/02_external_benchmark.md#regression-extension)
+[Regression extension](docs/analysis/03_external_benchmark.md#regression-extension)
 
 ### Weighted baseline
 
@@ -126,7 +146,7 @@ At 2,000 PA, the weighted combined model raised pooled CV R² from
 0.197 to 0.249, a difference of 0.053 (paired bootstrap 95% interval
 [0.028, 0.078]). CV RMSE fell from 2.504 to 2.420. The weighted scores
 remain nearly uncorrelated with each other (Pearson r = 0.016).
-[Step 3.4 methodology and results](docs/analysis/03_4_weighted_benchmark.md)
+[Appendix A.4 methodology and results](docs/analysis/appendix_a_4_weighted_benchmark.md)
 
 | Model | In-sample Pearson r | In-sample R² | CV Pearson r | CV R² | CV RMSE | CV MAE |
 |---|---:|---:|---:|---:|---:|---:|
@@ -139,7 +159,7 @@ remain nearly uncorrelated with each other (Pearson r = 0.016).
 
 ![Cross-validated performance](Results/Weighted_ON_OFF/External_Benchmark/figures/cv_performance.png)
 
-### Appendix A benchmark comparison
+### Appendix B benchmark comparison
 
 At PA ≥ 2,000, out-of-fold R² is 0.081 for Ruane's RISP BPS difference,
 0.151 for paired raw hit-rate differences, 0.197 for binomial ON/OFF,
@@ -148,7 +168,7 @@ weighted multinomial ON/OFF, on the same samples and validation folds.
 Binomial LIPS alone reaches 0.123, suggesting that late-inning pressure
 captures information beyond RISP. The comparison applies Ruane's BPS
 only to RISP and leaves its performance with LIPS open.
-[Appendix A methodology and results](docs/analysis/appendix_a_benchmark_comparison.md)
+[Appendix B methodology and results](docs/analysis/appendix_b_benchmark_comparison.md)
 
 ## Analysis
 
@@ -156,12 +176,13 @@ only to RISP and leaves its performance with LIPS open.
 |---|---|---|
 | [Baseline Analysis](docs/analysis/00_baseline_analysis.md) | Binomial ON/OFF statistics and significance distributions | Completed |
 | [Step 1](docs/analysis/01_risp_lips_correlation.md) | RISP–LIPS EDA, correlation analysis, and hypothesis testing | Completed |
-| [Step 2](docs/analysis/02_external_benchmark.md) | Baseball-Reference Clutch and WPA benchmark | Completed |
-| [Step 3.1](docs/analysis/03_weighted_on_off.md) | Fixed weights and weighted ON/OFF batting production | Completed |
-| [Step 3.2](docs/analysis/03_2_weighted_validation.md) | Weighted multinomial likelihood and calibration | Completed |
-| [Step 3.3](docs/analysis/03_3_weighted_baseline.md) | Weighted baseline and cutoff sensitivity | Completed |
-| [Step 3.4](docs/analysis/03_4_weighted_benchmark.md) | Weighted external benchmark and regression | Completed |
-| [Appendix A](docs/analysis/appendix_a_benchmark_comparison.md) | Ruane BPS, raw differences, and ON/OFF benchmark comparison | Completed |
+| [Step 2](docs/analysis/02_upper_limit_analysis.md) | Bayesian upper limits for binomial ON/OFF | Completed |
+| [Step 3](docs/analysis/03_external_benchmark.md) | Baseball-Reference Clutch and WPA benchmark | Completed |
+| [Appendix A.1](docs/analysis/appendix_a_1_weighted_on_off.md) | Fixed weights and weighted ON/OFF batting production | Completed |
+| [Appendix A.2](docs/analysis/appendix_a_2_weighted_validation.md) | Weighted multinomial likelihood and calibration | Completed |
+| [Appendix A.3](docs/analysis/appendix_a_3_weighted_baseline.md) | Weighted baseline and cutoff sensitivity | Completed |
+| [Appendix A.4](docs/analysis/appendix_a_4_weighted_benchmark.md) | Weighted external benchmark and regression | Completed |
+| [Appendix B](docs/analysis/appendix_b_benchmark_comparison.md) | Ruane BPS, raw differences, and ON/OFF benchmark comparison | Completed |
 
 ## Reproduction
 
@@ -171,6 +192,7 @@ From the repository root, create a virtual environment with
 ```bash
 python -m pip install -r requirements.txt
 python Script/analyze_risp_lips.py
+python Script/analyze_upper_limits.py
 python Script/analyze_external_benchmark.py
 python Script/analyze_clutch_regression.py
 python Script/prepare_weighted_on_off.py
@@ -197,6 +219,8 @@ method, coverage, and reproduction command.
 ├── AGENTS.md
 ├── Data/
 ├── Script/
+│   ├── binomial_upper_limit.py
+│   ├── analyze_upper_limits.py
 │   ├── prepare_weighted_on_off.py
 │   ├── multinomial_on_off.py
 │   ├── validate_weighted_on_off.py
@@ -205,6 +229,7 @@ method, coverage, and reproduction command.
 │   └── analyze_appendix_benchmarks.py
 ├── Results/
 │   ├── RISP_LIPS/
+│   ├── Upper_Limits/
 │   ├── External_Benchmark/
 │   ├── Weighted_ON_OFF/
 │   │   ├── fixed_weights.csv
@@ -218,23 +243,25 @@ method, coverage, and reproduction command.
 ├── docs/
 │   ├── methodology/
 │   │   ├── binomial_on_off.md
+│   │   ├── binomial_upper_limit.md
 │   │   └── multinomial_on_off.md
 │   ├── analysis/
 │   │   ├── 00_baseline_analysis.md
 │   │   ├── 01_risp_lips_correlation.md
-│   │   ├── 02_external_benchmark.md
-│   │   ├── 03_weighted_on_off.md
-│   │   ├── 03_2_weighted_validation.md
-│   │   ├── 03_3_weighted_baseline.md
-│   │   ├── 03_4_weighted_benchmark.md
-│   │   └── appendix_a_benchmark_comparison.md
+│   │   ├── 02_upper_limit_analysis.md
+│   │   ├── 03_external_benchmark.md
+│   │   ├── appendix_a_1_weighted_on_off.md
+│   │   ├── appendix_a_2_weighted_validation.md
+│   │   ├── appendix_a_3_weighted_baseline.md
+│   │   ├── appendix_a_4_weighted_benchmark.md
+│   │   └── appendix_b_benchmark_comparison.md
 │   └── roadmap.md
 └── tests/
 ```
 
 ## Roadmap
 
-Appendix A completes the empirical analyses. Joint index development
+The main analysis covers detection, upper limits, and external benchmarking. Joint index development
 remains deferred. [Roadmap](docs/roadmap.md)
 
 ## Data Sources and Attribution

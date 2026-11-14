@@ -1,4 +1,4 @@
-# Step 2 — External Benchmark Analysis
+# Step 3 — External Benchmark Analysis
 
 ## Data and coverage
 
