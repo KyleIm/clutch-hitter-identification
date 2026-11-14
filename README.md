@@ -139,6 +139,15 @@ remain nearly uncorrelated with each other (Pearson r = 0.016).
 
 ![Cross-validated performance](Results/Weighted_ON_OFF/External_Benchmark/figures/cv_performance.png)
 
+### Appendix A benchmark comparison
+
+At PA ≥ 2,000, out-of-fold R² is 0.081 for Ruane's RISP BPS difference,
+0.151 for paired raw hit-rate differences, 0.197 for binomial ON/OFF,
+0.215 for paired raw weighted production differences, and 0.249 for
+weighted multinomial ON/OFF. The raw differences and ON/OFF scores
+were compared on the same player samples and validation folds.
+[Appendix A methodology and results](docs/analysis/appendix_a_benchmark_comparison.md)
+
 ## Analysis
 
 | Analysis | Description | Status |
@@ -150,6 +159,7 @@ remain nearly uncorrelated with each other (Pearson r = 0.016).
 | [Step 3.2](docs/analysis/03_2_weighted_validation.md) | Weighted multinomial likelihood and calibration | Completed |
 | [Step 3.3](docs/analysis/03_3_weighted_baseline.md) | Weighted baseline and cutoff sensitivity | Completed |
 | [Step 3.4](docs/analysis/03_4_weighted_benchmark.md) | Weighted external benchmark and regression | Completed |
+| [Appendix A](docs/analysis/appendix_a_benchmark_comparison.md) | Ruane BPS, raw differences, and ON/OFF benchmark comparison | Completed |
 
 ## Reproduction
 
@@ -165,6 +175,7 @@ python Script/prepare_weighted_on_off.py
 python Script/validate_weighted_on_off.py --simulations 10000
 python Script/analyze_weighted_baseline.py
 python Script/analyze_weighted_benchmark.py --bootstrap 10000
+python Script/analyze_appendix_benchmarks.py
 python -m unittest discover -s tests
 ```
 
@@ -188,18 +199,20 @@ method, coverage, and reproduction command.
 │   ├── multinomial_on_off.py
 │   ├── validate_weighted_on_off.py
 │   ├── analyze_weighted_baseline.py
-│   └── analyze_weighted_benchmark.py
+│   ├── analyze_weighted_benchmark.py
+│   └── analyze_appendix_benchmarks.py
 ├── Results/
 │   ├── RISP_LIPS/
 │   ├── External_Benchmark/
-│   └── Weighted_ON_OFF/
-│       ├── fixed_weights.csv
-│       ├── risp_player_counts.csv
-│       ├── lips_player_counts.csv
-│       ├── coverage.csv
-│       ├── Validation/
-│       ├── Baseline/
-│       └── External_Benchmark/
+│   ├── Weighted_ON_OFF/
+│   │   ├── fixed_weights.csv
+│   │   ├── risp_player_counts.csv
+│   │   ├── lips_player_counts.csv
+│   │   ├── coverage.csv
+│   │   ├── Validation/
+│   │   ├── Baseline/
+│   │   └── External_Benchmark/
+│   └── Appendix_A/
 ├── docs/
 │   ├── methodology/
 │   │   ├── binomial_on_off.md
@@ -211,15 +224,16 @@ method, coverage, and reproduction command.
 │   │   ├── 03_weighted_on_off.md
 │   │   ├── 03_2_weighted_validation.md
 │   │   ├── 03_3_weighted_baseline.md
-│   │   └── 03_4_weighted_benchmark.md
+│   │   ├── 03_4_weighted_benchmark.md
+│   │   └── appendix_a_benchmark_comparison.md
 │   └── roadmap.md
 └── tests/
 ```
 
 ## Roadmap
 
-Step 3.4 compares weighted and binomial models against Baseball-Reference
-Clutch. Joint index development remains deferred. [Roadmap](docs/roadmap.md)
+Appendix A completes the empirical analyses. Joint index development
+remains deferred. [Roadmap](docs/roadmap.md)
 
 ## Data Sources and Attribution
 

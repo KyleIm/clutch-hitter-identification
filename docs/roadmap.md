@@ -12,9 +12,12 @@ validated the signed multinomial likelihood ratio.
 baseline. [Step 3.4](analysis/03_4_weighted_benchmark.md) compares both
 score families against Baseball-Reference Clutch on identical validation folds.
 
+[Appendix A](analysis/appendix_a_benchmark_comparison.md) completes the empirical
+analyses with the Ruane BPS and raw performance benchmarks.
+
 ### Deferred Joint RISP–LIPS Index
 
-The joint model remains deferred while the weighted marginal framework is developed.
+The joint model remains deferred beyond the completed empirical analyses.
 
 Use the four mutually exclusive categories verified in [Step 1](analysis/01_risp_lips_correlation.md).
 
