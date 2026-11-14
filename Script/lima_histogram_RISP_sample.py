@@ -129,48 +129,31 @@ def li_ma_s(n_rate, b_rate, alpha):
     return sign * np.sqrt(value)
 
 
-def _log_likelihood_term(count, observed_prob, null_prob):
-    if count == 0:
-        return 0.0
-    if observed_prob <= 0 or null_prob <= 0:
-        return float("nan")
-    return count * np.log(observed_prob / null_prob)
-
-
 def binomial_on_off_s(on_success, on_failure, off_success, off_failure):
+    """Return signed sqrt(G) for scalar or broadcastable binomial counts."""
+    on_success, on_failure, off_success, off_failure = np.broadcast_arrays(
+        on_success, on_failure, off_success, off_failure
+    )
     on_trials = on_success + on_failure
     off_trials = off_success + off_failure
     total_trials = on_trials + off_trials
     total_success = on_success + off_success
+    total_failure = on_failure + off_failure
 
-    if on_trials == 0 or off_trials == 0:
-        return float("nan")
-
-    p_on = on_success / on_trials
-    p_off = off_success / off_trials
-    p_0 = total_success / total_trials
-
-    on_failure_prob = 1 - p_on
-    off_failure_prob = 1 - p_off
-    null_failure_prob = 1 - p_0
-
-    terms = [
-        _log_likelihood_term(on_success, p_on, p_0),
-        _log_likelihood_term(on_failure, on_failure_prob, null_failure_prob),
-        _log_likelihood_term(off_success, p_off, p_0),
-        _log_likelihood_term(off_failure, off_failure_prob, null_failure_prob),
-    ]
-    if any(pd.isna(term) for term in terms):
-        return float("nan")
-
-    ts_b = 2 * sum(terms)
-    if ts_b < 0 and np.isclose(ts_b, 0):
-        ts_b = 0.0
-    if ts_b < 0:
-        return float("nan")
-
-    sign = 1 if p_on >= p_off else -1
-    return sign * np.sqrt(ts_b)
+    statistic = np.zeros(on_trials.shape)
+    with np.errstate(divide="ignore", invalid="ignore"):
+        for count, sample_trials, outcome_total in (
+            (on_success, on_trials, total_success),
+            (on_failure, on_trials, total_failure),
+            (off_success, off_trials, total_success),
+            (off_failure, off_trials, total_failure),
+        ):
+            expected = sample_trials * (outcome_total / total_trials)
+            statistic += np.where(count > 0, count * np.log(count / expected), 0)
+    direction = np.sign(on_success * off_trials - off_success * on_trials)
+    score = direction * np.sqrt(2 * np.maximum(statistic, 0))
+    score = np.where((on_trials > 0) & (off_trials > 0), score, np.nan)
+    return score.item() if score.ndim == 0 else score
 
 
 def build_player_counts(df):

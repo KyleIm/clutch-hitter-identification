@@ -21,7 +21,12 @@ The current implementation replaces the original Poisson Li-Ma formula with a bi
 │   ├── build_retrosheet_pa_compact_range.py
 │   ├── build_league_RISP_sample_counts.py
 │   ├── lima_histogram_RISP_sample.py    # Core RISP labeling and binomial ON/OFF S helpers
-│   └── plot_RISP_histogram.py
+│   ├── plot_RISP_histogram.py
+│   └── analyze_risp_lips.py            # Step 1 EDA and overlap-aware simulation
+├── Results/RISP_LIPS/                 # Generated tables and figures
+├── docs/                              # Methods and mathematical derivation
+├── tests/                             # Statistical and integrity tests
+├── AGENTS.md
 ├── cle_2026_07_plate_appearances_compact.csv
 └── cle_2026_07_statcast_pitches_raw.csv
 ```
@@ -52,39 +57,141 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Download Retrosheet parsed CSV zip files:
+The repository includes the compact Retrosheet plate-appearance files for
+1998–2025. From the repository root, regenerate the two player summaries
+into a separate directory and plot the career sample using these commands.
+
+```bash
+python Script/build_league_RISP_sample_counts.py --input-glob "Data/Retrosheet/Compact/mlb_*_plate_appearances_compact.csv" --situation risp --output results/risp.csv
+python Script/build_league_RISP_sample_counts.py --input-glob "Data/Retrosheet/Compact/mlb_*_plate_appearances_compact.csv" --situation lips --output results/lips.csv
+python Script/plot_RISP_histogram.py --input results/risp.csv --min-pa 2000
+python Script/plot_RISP_histogram.py --input results/lips.csv --min-pa 2000
+```
+
+To rebuild the compact inputs from Retrosheet's parsed play-by-play files,
+download the source archives and run the compact builder.
 
 ```bash
 python Script/download_retrosheet_csv.py --start-year 1998 --end-year 2025
-```
-
-Build compact plate-appearance files:
-
-```bash
 python Script/build_retrosheet_pa_compact_range.py --start-year 1998 --end-year 2025
-```
-
-Build the 1998-2025 player summary:
-
-```bash
-python Script/build_league_RISP_sample_counts.py \
-  --input-glob 'Data/Retrosheet/Compact/mlb_*_plate_appearances_compact.csv' \
-  --output Data/mlb_1998_2025_RISP_sample_counts.csv
-```
-
-Show the histogram:
-
-```bash
-python Script/plot_RISP_histogram.py
 ```
 
 ## Current Snapshot
 
-The histograms below show career-level RISP and LIPS signed binomial ON/OFF significance for 1998-2025 hitters with at least 2000 career plate appearances. The RISP distribution remains relatively close to centered, while the LIPS distribution is shifted substantially negative. This shift is plausibly related to the fact that LIPS plate appearances occur in late and close game states, where hitters are more likely to face high-leverage relief pitchers. The league-wide LIPS/non-LIPS baseline should therefore be evaluated before interpreting player-level signs as clutch effects.
+RISP means a runner on second or third before the final pitch. LIPS means
+the seventh inning or later with the batting team trailing by up to three
+runs, tied, or ahead by one run. It also includes a four-run deficit with
+the bases loaded at the start of the plate appearance.
+
+| Career PA cutoff | Hitters | RISP mean S | RISP SD | LIPS mean S | LIPS SD |
+|---:|---:|---:|---:|---:|---:|
+| 1,000 | 1,343 | −0.163 | 1.054 | −0.895 | 1.079 |
+| 2,000 | 861 | −0.212 | 1.051 | −0.989 | 1.079 |
+| 3,000 | 595 | −0.250 | 1.060 | −1.092 | 1.108 |
+
+Across all eligible batting trials, the pooled hit rate was 25.28% in
+RISP and 25.62% outside RISP. The corresponding LIPS rates were 24.14%
+and 25.81%. These are descriptive league rates and reflect differences
+in which hitters, pitchers, and game states enter each sample. The
+denominator includes sacrifice flies, so the rates use the success
+definition in this repository.
+
+Among the 861 hitters with at least 2,000 PA, the player-level RISP and
+LIPS scores had a Pearson correlation of 0.004 and a Spearman correlation
+of 0.011. These are descriptive correlations. The two scores share some
+plate appearances, and the comparison has yet to account for that overlap.
+
+For each player with a defined score, the squared score agreed with an
+independently calculated two-proportion likelihood-ratio G statistic
+within 3e-12, and the sign matched the difference in hit rates. The
+current score tests equal hit probabilities for the two situations
+within a player. Identifying individual hitters with repeatable clutch
+skill would also require calibration, accounting for multiple comparisons
+and league context, and a repeatability analysis.
 
 ![1998-2025 RISP Binomial ON/OFF S Distribution](binomial_onoff_risp_histogram_1998_2025_pa2000.png)
 
 ![1998-2025 LIPS Binomial ON/OFF S Distribution](binomial_onoff_lips_histogram_1998_2025_pa2000.png)
+
+### RISP–LIPS Exploratory Data Analysis and Correlation Analysis
+
+Reproduce the tables and figures with the tracked 1998–2025 inputs.
+
+```bash
+python Script/analyze_risp_lips.py --simulations 10000 --seed 20251113
+python -m unittest discover -s tests
+```
+
+The [analysis methods](docs/risp_lips_exploratory_analysis.md) describe the
+scope, paired sample, interval estimators, and overlap model. The
+[generated results](Results/RISP_LIPS/) contain the merged player dataset,
+four-category counts, integrity checks, summary tables, and figures.
+
+#### 1. Exploratory Data Analysis
+
+How do score distributions and player profiles differ between RISP and LIPS?
+The summaries matched on all 5,716 Retrosheet batter IDs and total PA counts.
+Of these, 4,010 had both scores defined. All hitters meeting each of the
+three PA thresholds had defined scores for both situations. Aggregating the
+four disjoint categories back to RISP and LIPS reproduced the published
+marginal counts across 4,569,453 eligible batting trials.
+
+LIPS scores shifted lower at each cutoff. The greater exposure to strong
+relief pitchers in late, close games is one possible explanation. The
+analysis did not test that explanation. At 2,000 PA, Allen Craig led RISP
+(S = 3.198) and Paul DeJong led LIPS (S = 2.592). Casey Blake and Jermaine
+Dye had the lowest RISP and LIPS scores, respectively. Freddie Freeman had
+the largest RISP-minus-LIPS gap (2.588 versus −3.487). Travis Lee had the
+largest gap in the other direction (−2.335 versus 1.557). Full
+[distribution statistics](Results/RISP_LIPS/descriptive_statistics.csv)
+and [extreme results](Results/RISP_LIPS/extremes.csv) include the
+sensitivity cutoffs.
+
+![Comparative boxplots of RISP and LIPS scores by career PA cutoff](Results/RISP_LIPS/figures/boxplot.png)
+
+#### 2. Correlation Analysis
+
+How closely do hitters' results align in the two situations? The signed
+score measures evidence for a rate difference, while the raw difference
+measures its size. The two sets of coefficients were near zero at all
+three cutoffs.
+
+| Career PA cutoff | Hitters | Score Pearson | Score Spearman | Raw difference Pearson | Raw difference Spearman | Score top / bottom overlap |
+|---:|---:|---:|---:|---:|---:|---:|
+| 1,000 | 1,343 | −0.018 | −0.010 | −0.040 | −0.017 | 2 / 4 (of 68 per tail) |
+| 2,000 | 861 | 0.004 | 0.011 | 0.016 | 0.027 | 2 / 4 (of 44 per tail) |
+| 3,000 | 595 | −0.015 | −0.020 | 0.006 | −0.008 | 1 / 2 (of 30 per tail) |
+
+For the primary sample, the 95% intervals for Pearson and Spearman score
+correlations were [−0.063, 0.071] and [−0.059, 0.076]. Conventional two-sided
+p-values against zero were 0.900 and 0.750. The
+[correlation table](Results/RISP_LIPS/correlations.csv) includes all
+intervals and conventional p-values. The [tail overlap table](Results/RISP_LIPS/tail_overlap.csv)
+also includes the raw rate differences.
+
+![Scatterplots for signed scores and hit-rate differences across the three career PA cutoffs](Results/RISP_LIPS/figures/scatter.png)
+
+#### 3. Statistical Hypothesis Testing
+
+Does observed score correlation exceed what random hit variation and shared
+plate appearances can explain? In each of 10,000 draws, a hitter's pooled
+hit rate and four observed trial counts determine the simulated hits. Both
+scores use the same draw. The observations fell inside the central 95%
+null intervals across all cutoffs.
+
+| Method at 2,000 PA | Observed | Mean under null | Central 95% null interval | Observed minus null mean | One-sided p |
+|---|---:|---:|---:|---:|---:|
+| Pearson | 0.0043 | −0.0018 | [−0.0687, 0.0659] | 0.0060 | 0.432 |
+| Spearman | 0.0109 | −0.0016 | [−0.0685, 0.0671] | 0.0125 | 0.359 |
+
+The analysis found no evidence of positive excess correlation under the
+specified model. The null assumes a constant success probability for each
+hitter and omits league-wide situational effects, opponent quality, and
+other context. This comparison does not measure season-to-season
+repeatability. See the [Monte Carlo results](Results/RISP_LIPS/null_summary.csv)
+for all cutoffs.
+
+![Simulated overlap-aware correlation distributions and observed values](Results/RISP_LIPS/figures/null_correlations.png)
 
 ## Planned Analyses
 
@@ -94,31 +201,16 @@ The roadmap is organized around career-level analyses. The immediate priorities 
 
 The current ON/OFF statistic uses a binomial likelihood for two independent success/failure samples and is mathematically equivalent to a standard two-proportion likelihood-ratio, or G, test. The Li-Ma connection is methodological motivation from the ON/OFF likelihood-ratio framework; the likelihood used here is binomial rather than Poisson.
 
-- Validate the binomial ON/OFF statistic against the standard two-proportion likelihood-ratio (G) test.
-- Perform Monte Carlo null simulations using observed ON/OFF trial counts to evaluate the calibration of the signed significance statistic.
-- Conduct PA cutoff sensitivity analyses using career PA thresholds of 1000, 2000, and 3000. The current primary threshold is 2000 PA.
+- Evaluate marginal score calibration separately from the overlap-aware population correlation test.
 - Compare the mean, median, standard deviation, skewness, and positive/negative tail fractions at thresholds such as `|S| > 2` and `|S| > 3`.
 - Optionally examine the robustness of career-level significance using leave-one-season-out analyses.
 - Distinguish this robustness check from year-to-year repeatability of player-specific clutch skill, which is a separate question.
 - Address multiple testing across players using an appropriate method, such as false discovery rate control or population-level null simulations.
 
-### RISP and LIPS cross-validation
+### Additional RISP and LIPS comparisons
 
-RISP and LIPS are separate clutch situation definitions. They are analyzed with the same binomial ON/OFF framework, but their baseline distributions need not be the same. For 1998-2025 career-level results with career PA >= 2000, the current player sample contains 861 hitters.
-
-| Statistic | RISP | LIPS |
-|---|---:|---:|
-| Mean | -0.212 | -0.989 |
-| Standard deviation | 1.051 | 1.079 |
-
-- Calculate Pearson and Spearman correlations between player-level RISP and LIPS signed significance.
-- Generate a player-level scatter plot comparing the two statistics.
-- Compare the overlap of top-performing and bottom-performing players, including the top and bottom 5%.
-- Compare empirical standardized scores within each distribution, while explicitly distinguishing these relative scores from statistical detection significance.
-- Compare raw ON/OFF effect sizes, defined as batting-average differences, for RISP and LIPS.
-- Quantify league-wide RISP/non-RISP and LIPS/non-LIPS baseline differences and investigate their effects on the significance distributions.
-- Account for overlap between RISP and LIPS plate appearances when interpreting correlations. Null simulations or permutation methods should be used to evaluate whether observed agreement exceeds what would be expected from overlapping samples alone.
-- Avoid automatically recentering the signed significance distributions and reinterpreting recentered values as statistical significance.
+- Compare empirical standardized scores within each distribution and distinguish them from statistical detection significance.
+- Investigate how the observed league-wide RISP and LIPS hit-rate gaps affect the significance distributions.
 
 ### Joint RISP–LIPS Likelihood-Ratio Analysis
 
