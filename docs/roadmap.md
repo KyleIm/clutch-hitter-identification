@@ -5,10 +5,11 @@
 
 ## Step 3: Weighted ON/OFF Framework
 
-[Step 3.1](analysis/03_weighted_on_off.md) is complete. The seven-category
-counts and weighted production means use fixed FanGraphs Basic wOBA
-coefficients. A subsequent step will specify the weighted ON/OFF
-statistic before evaluation against Baseball-Reference Clutch.
+[Step 3.1](analysis/03_weighted_on_off.md) established the fixed weights and
+outcome counts. [Step 3.2](analysis/03_2_weighted_validation.md) derived and
+validated the signed multinomial likelihood ratio. Later steps will
+analyze the weighted baseline and evaluate it against Baseball-Reference
+Clutch.
 
 ### Deferred Joint RISP–LIPS Index
 

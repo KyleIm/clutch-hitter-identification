@@ -69,6 +69,14 @@ outcomes across all seasons. A home run in 1998 and one in 2025 both receive
 a weight of 2.00 regardless of differences in the offensive environment.
 [Step 3.1 methodology](docs/analysis/03_weighted_on_off.md)
 
+The binomial statistic compares hit probabilities. The weighted multinomial
+statistic compares weighted production means across seven outcomes and allows
+different ON and OFF distributions under the null. In 100,000 validation
+fits there were no optimizer failures. Nominal 5% rejection was 4.57–5.24%
+in the five realistic null configurations and 1.63% in the sparse case.
+[Multinomial derivation](docs/methodology/multinomial_on_off.md) ·
+[Step 3.2 validation](docs/analysis/03_2_weighted_validation.md)
+
 ## Key Findings
 
 LIPS scores shifted lower than RISP scores at all three PA cutoffs. The signed
@@ -103,6 +111,7 @@ R² = 0.201 in sample. Five-fold validation yielded r = 0.443 and R² =
 | [Step 1](docs/analysis/01_risp_lips_correlation.md) | RISP–LIPS EDA, correlation analysis, and hypothesis testing | Completed |
 | [Step 2](docs/analysis/02_external_benchmark.md) | Baseball-Reference Clutch and WPA benchmark | Completed |
 | [Step 3.1](docs/analysis/03_weighted_on_off.md) | Fixed weights and weighted ON/OFF batting production | Completed |
+| [Step 3.2](docs/analysis/03_2_weighted_validation.md) | Weighted multinomial likelihood and calibration | Completed |
 
 ## Reproduction
 
@@ -115,6 +124,7 @@ python Script/analyze_risp_lips.py
 python Script/analyze_external_benchmark.py
 python Script/analyze_clutch_regression.py
 python Script/prepare_weighted_on_off.py
+python Script/validate_weighted_on_off.py --simulations 10000
 python -m unittest discover -s tests
 ```
 
@@ -134,7 +144,9 @@ method, coverage, and reproduction command.
 ├── AGENTS.md
 ├── Data/
 ├── Script/
-│   └── prepare_weighted_on_off.py
+│   ├── prepare_weighted_on_off.py
+│   ├── multinomial_on_off.py
+│   └── validate_weighted_on_off.py
 ├── Results/
 │   ├── RISP_LIPS/
 │   ├── External_Benchmark/
@@ -142,22 +154,26 @@ method, coverage, and reproduction command.
 │       ├── fixed_weights.csv
 │       ├── risp_player_counts.csv
 │       ├── lips_player_counts.csv
-│       └── coverage.csv
+│       ├── coverage.csv
+│       └── Validation/
 ├── docs/
-│   ├── methodology/binomial_on_off.md
+│   ├── methodology/
+│   │   ├── binomial_on_off.md
+│   │   └── multinomial_on_off.md
 │   ├── analysis/
 │   │   ├── 00_baseline_analysis.md
 │   │   ├── 01_risp_lips_correlation.md
 │   │   ├── 02_external_benchmark.md
-│   │   └── 03_weighted_on_off.md
+│   │   ├── 03_weighted_on_off.md
+│   │   └── 03_2_weighted_validation.md
 │   └── roadmap.md
 └── tests/
 ```
 
 ## Roadmap
 
-Step 3.1 applies fixed weights to RISP and LIPS batting production. A
-subsequent step will specify the weighted ON/OFF statistic. [Roadmap](docs/roadmap.md)
+Step 3.2 validates the weighted statistic. The weighted baseline and
+external benchmark comparison are planned. [Roadmap](docs/roadmap.md)
 
 ## Data Sources and Attribution
 

@@ -1,0 +1,3 @@
+situation,players,defined,undefined,max_abs_error,absolute_tolerance
+risp,5716,4882,834,4.4169969157931144e-10,2e-07
+lips,5716,4092,1624,1.9127379336273623e-08,2e-07
