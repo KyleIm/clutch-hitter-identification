@@ -88,10 +88,30 @@ variability. [All cutoffs](../../Results/Appendix_A/bootstrap_comparisons.csv).
 
 ## Interpretation
 
-Ruane's raw RISP BPS difference explains 8.4% of the primary sample's
-Clutch variation in sample and 8.1% out of fold. In the RISP-only
-comparison, its CV R² is slightly higher than B1's and lower than W1's,
-with both paired intervals spanning zero.
+Among RISP-only models in the primary sample, CV R² rises from 0.074
+for binomial RISP (B1) to 0.081 for Ruane's raw BPS difference (A1) and
+0.092 for weighted multinomial RISP (W1). This ordering is consistent
+with the hypothesis that richer measures of batting production improve
+Clutch estimation. Both paired intervals comparing A1 with B1 and W1
+span zero, and B1 versus W1 was not formally tested here. The three
+models differ in outcome weights and statistical transformation, so the
+ordering cannot isolate the contribution of either.
+
+Binomial LIPS alone (B2) reaches a higher CV R² than Ruane's RISP BPS
+difference (0.123 versus 0.081), even though it weights all hits equally
+and excludes walks and hit-by-pitches. Combining binomial RISP and LIPS
+(B3) reaches 0.197, about 2.4 times Ruane's CV R², using only hit
+indicators within eligible trials. These descriptive comparisons suggest
+that the choice of game situations can matter at least as much as the
+complexity of the batting-production measure. LIPS can capture
+information that a RISP-only measure misses. The comparison applied
+Ruane's BPS only to RISP, so it shows the limitation of relying on RISP
+alone and leaves open how BPS would perform with LIPS included.
+
+Using weighted production in the two-situation ON/OFF model (W3)
+further raises CV R² to 0.249. Together, these results suggest that
+broader situational coverage and richer outcome representation can
+provide complementary benefits.
 
 Adding LIPS helps even with raw features. CV R² rises from .058 to .151
 for hit rates and from .077 to .215 for weighted production. Holding

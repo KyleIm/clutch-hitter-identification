@@ -144,8 +144,10 @@ remain nearly uncorrelated with each other (Pearson r = 0.016).
 At PA ≥ 2,000, out-of-fold R² is 0.081 for Ruane's RISP BPS difference,
 0.151 for paired raw hit-rate differences, 0.197 for binomial ON/OFF,
 0.215 for paired raw weighted production differences, and 0.249 for
-weighted multinomial ON/OFF. The raw differences and ON/OFF scores
-were compared on the same player samples and validation folds.
+weighted multinomial ON/OFF, on the same samples and validation folds.
+Binomial LIPS alone reaches 0.123, suggesting that late-inning pressure
+captures information beyond RISP. The comparison applies Ruane's BPS
+only to RISP and leaves its performance with LIPS open.
 [Appendix A methodology and results](docs/analysis/appendix_a_benchmark_comparison.md)
 
 ## Analysis
