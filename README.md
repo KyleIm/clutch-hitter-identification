@@ -1,4 +1,6 @@
-# What is a clutch hitter?
+# A Method for Identifying Clutch Hitters
+
+## What is a clutch hitter?
 
 A clutch hitter performs better in important situations relative to their own ordinary performance. A hitter can produce more than their peers in a key plate appearance while performing below their own usual level. This project separates those questions by comparing each hitter's performance with runners in scoring position (RISP) and in late-inning pressure situations (LIPS) with their performance outside each situation.
 
@@ -20,7 +22,7 @@ S = \mathrm{sgn}(\widehat p_{\mathrm{ON}}-\widehat p_{\mathrm{OFF}})
     \sqrt{2(\ell_1-\ell_0)}.
 ```
 
-The construction follows Li–Ma's ON/OFF framing and signed likelihood-ratio approach, with a binomial likelihood for batting trials in place of the original Poisson counts. The squared score is the standard two-proportion likelihood-ratio $G$ statistic. The contribution is applying that test and pairing it with upper limits for situational batting effects. [Binomial derivation and Li–Ma reference](docs/methodology/binomial_on_off.md)
+The construction follows Li–Ma's ON/OFF framing and signed likelihood-ratio approach, with a binomial likelihood for batting trials in place of the original Poisson counts. The squared score is the standard two-proportion likelihood-ratio $G$ statistic. The contribution is applying that test and pairing it with upper limits for situational batting effects. [Binomial derivation and Li–Ma reference](docs/analysis/appendix_c_mathematical_derivations.md#c2--derivation-of-the-binomial-onoff-statistic)
 
 ## Step 1 — Is there evidence for general clutch ability?
 
@@ -44,7 +46,7 @@ Observed correlations were near zero across the PA cutoffs and did not show sign
 
 ## Step 2 — How large could an undetected clutch effect be?
 
-The absence of a detected positive effect leaves a practical question about its possible size. With independent uniform priors on the ON and OFF hit probabilities, the data give two beta posteriors. We form the posterior of $\delta=p_{\mathrm{ON}}-p_{\mathrm{OFF}}$ and take its 95th percentile conditional on $\delta\geq0$. Zech (1989) motivates normalization over a nonnegative signal region. Kawasaki and Miyaoka (2010) derive the posterior for a difference of binomial proportions. [Derivation and references](docs/methodology/binomial_upper_limit.md)
+The absence of a detected positive effect leaves a practical question about its possible size. With independent uniform priors on the ON and OFF hit probabilities, the data give two beta posteriors. We form the posterior of $\delta=p_{\mathrm{ON}}-p_{\mathrm{OFF}}$ and take its 95th percentile conditional on $\delta\geq0$. Zech (1989) motivates normalization over a nonnegative signal region. Kawasaki and Miyaoka (2010) derive the posterior for a difference of binomial proportions. [Derivation and references](docs/analysis/appendix_c_mathematical_derivations.md#c4--bayesian-upper-limits-for-binomial-onoff)
 
 Three quantities answer distinct questions. The signed score measures evidence against equal rates. $P(\delta>0\mid D)$ measures posterior support for a positive effect. The upper limit solves $P(\delta\leq U\mid D,\delta\geq0)=0.95$ and bounds its size conditional on its being positive. This is a conditional Bayesian credible limit, with no guarantee of 95% repeated-sampling coverage.
 
@@ -104,7 +106,7 @@ The weighted model uses fixed Basic wOBA coefficients to represent the productio
 | Triple | 1 | 1.60 |
 | Home run | 1 | 2.00 |
 
-The weighted mean is the sum of each outcome's weight times its count, divided by weighted-eligible PA. Intentional walks, sacrifice bunts, and catcher interference remain excluded. The measure uses project-specific eligibility and the same weights in every season, unlike official season-specific wOBA. The multinomial null constrains the ON and OFF **weighted means** to agree while allowing different outcome distributions. The constrained optimization adds complexity, and binary outcome weights recover the binomial statistic. [Outcome weights](docs/analysis/appendix_a_1_weighted_on_off.md) · [Multinomial derivation](docs/methodology/multinomial_on_off.md)
+The weighted mean is the sum of each outcome's weight times its count, divided by weighted-eligible PA. Intentional walks, sacrifice bunts, and catcher interference remain excluded. The measure uses project-specific eligibility and the same weights in every season, unlike official season-specific wOBA. The multinomial null constrains the ON and OFF **weighted means** to agree while allowing different outcome distributions. The constrained optimization adds complexity, and binary outcome weights recover the binomial statistic. [Outcome weights](docs/analysis/appendix_a_1_weighted_on_off.md) · [Multinomial derivation](docs/analysis/appendix_c_mathematical_derivations.md#c5--weighted-multinomial-onoff-framework)
 
 In 100,000 validation fits, the optimizer reported zero failures. At nominal 5%, null rejection ranged from 4.57% to 5.24% across the five realistic configurations and fell to 1.63% in the sparse case. The weighted baseline included 5,019,958 eligible PA. At the primary cutoff, the mean RISP score shifted from −0.212 to +0.102, while the mean LIPS score remained negative (−0.989 to −1.009). [Validation](docs/analysis/appendix_a_2_weighted_validation.md) · [Weighted baseline](docs/analysis/appendix_a_3_weighted_baseline.md)
 
@@ -141,7 +143,11 @@ Tom Ruane's *In Search of Clutch Hitting* (2005) uses BPS, batting average plus 
 | Combined binomial ON/OFF | 0.197 | 2.504 |
 | Combined weighted ON/OFF | 0.249 | 2.420 |
 
-The RISP-only ordering is consistent with a benefit from richer outcomes, but both paired intervals comparing Ruane with binomial or weighted RISP include zero. Binomial LIPS alone has a higher point estimate than Ruane's RISP BPS. That comparison suggests that the situation definition matters and leaves open how well BPS would perform if applied to LIPS. Separately, paired bootstrap intervals support gains for both combined ON/OFF models over their corresponding combined raw differences in the primary sample. [Appendix B comparisons](docs/analysis/appendix_b_benchmark_comparison.md)
+Binomial RISP has a slightly lower Pearson correlation with Clutch than Ruane’s RISP BPS (0.276 versus 0.289). The RISP-only ordering is consistent with a benefit from richer outcomes, but both paired intervals comparing Ruane with binomial or weighted RISP include zero. Binomial LIPS alone has a higher point estimate than Ruane's RISP BPS. That comparison suggests that the situation definition matters and leaves open how well BPS would perform if applied to LIPS. Binomial ON/OFF contributes a detection statistic, a closed-form solution, and a Bayesian upper-limit construction. Weighted multinomial ON/OFF models richer outcomes with a constrained numerical fit. Separately, paired bootstrap intervals support gains for both combined ON/OFF models over their corresponding combined raw differences in the primary sample. [Appendix B comparisons](docs/analysis/appendix_b_benchmark_comparison.md)
+
+## Appendix C — Mathematical Derivations
+
+Appendix C brings together the Poisson and binomial ON/OFF derivations, asymptotic calibration and overlap-aware test, Bayesian upper limits, and weighted multinomial likelihood with its binomial reduction. [Appendix C](docs/analysis/appendix_c_mathematical_derivations.md)
 
 ## Conclusions and future directions
 
@@ -159,6 +165,7 @@ These are observational comparisons. Opponent quality, parks, and player usage c
 | [Step 3](docs/analysis/03_external_benchmark.md) | WPA and Clutch benchmarks, regression, and overall batting dependence |
 | [Appendix A](docs/analysis/appendix_a_weighted_framework.md) | Weighted multinomial ON/OFF framework, validation, and benchmark |
 | [Appendix B](docs/analysis/appendix_b_benchmark_comparison.md) | Ruane BPS and raw-difference comparisons |
+| [Appendix C](docs/analysis/appendix_c_mathematical_derivations.md) | Mathematical derivations for the main analysis and Appendix A |
 
 ## Reproduction
 

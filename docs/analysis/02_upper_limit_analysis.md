@@ -1,5 +1,7 @@
 # Step 2 — Bayesian upper limits for binomial ON/OFF
 
+[Bayesian upper-limit derivation in Appendix C](appendix_c_mathematical_derivations.md#c4--bayesian-upper-limits-for-binomial-onoff).
+
 The signed binomial ON/OFF score measures evidence for a difference in
 situational hit rates. A positive nondetection leaves open a range of
 plausible positive effects. The Zech-inspired Bayesian binomial upper

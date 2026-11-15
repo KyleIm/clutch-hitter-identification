@@ -1,5 +1,7 @@
 # Step 1 — RISP–LIPS Correlation
 
+[Overlapping-sample derivation in Appendix C](appendix_c_mathematical_derivations.md#overlap-between-risp-and-lips).
+
 ## Research Questions
 
 1. How do score distributions and player profiles differ between RISP and LIPS?

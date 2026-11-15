@@ -1,5 +1,7 @@
 # Appendix A — Weighted Multinomial ON/OFF Framework
 
+[Weighted multinomial derivation in Appendix C](appendix_c_mathematical_derivations.md#c5--weighted-multinomial-onoff-framework).
+
 The four reports follow the weighted model from outcome definitions through validation and comparison with Baseball-Reference Clutch.
 
 | Report | Contents |

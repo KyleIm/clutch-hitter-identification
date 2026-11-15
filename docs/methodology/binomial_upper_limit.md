@@ -1,5 +1,7 @@
 # Zech-inspired Bayesian binomial upper limit
 
+[See the consolidated derivation in Appendix C](../analysis/appendix_c_mathematical_derivations.md#c4--bayesian-upper-limits-for-binomial-onoff).
+
 Li–Ma motivates the signed likelihood-ratio detection statistic used
 in the [binomial ON/OFF framework](binomial_on_off.md). For upper limits,
 we use the normalization over nonnegative signal strengths in the

@@ -1,5 +1,7 @@
 # Weighted multinomial ON/OFF likelihood ratio
 
+[See the consolidated derivation in Appendix C](../analysis/appendix_c_mathematical_derivations.md#c5--weighted-multinomial-onoff-framework).
+
 | | Binomial ON/OFF | Weighted multinomial ON/OFF |
 |---|---|---|
 | Outcomes | Hit and failure | Zero, unintentional walk, HBP, single, double, triple, home run |

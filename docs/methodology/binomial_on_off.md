@@ -1,5 +1,7 @@
 # Binomial ON/OFF Likelihood-Ratio Significance
 
+[See the consolidated derivation in Appendix C](../analysis/appendix_c_mathematical_derivations.md#c2--derivation-of-the-binomial-onoff-statistic).
+
 ## Purpose
 
 This note records the derivation of a binomial ON/OFF significance

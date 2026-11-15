@@ -88,6 +88,18 @@ variability. [All cutoffs](../../Results/Appendix_A/bootstrap_comparisons.csv).
 
 ## Interpretation
 
+The comparison varies three features. **Outcome representation** ranges
+from binary hits to BPS and fixed-weight production. **Situation definition**
+varies between RISP, LIPS, and their combination. **Statistical treatment**
+ranges from raw differences to signed likelihood ratios, which account for
+trial counts and sampling variation. Comparisons that change more than
+one feature cannot isolate the effect of any one change.
+
+Binomial RISP has a slightly lower Pearson correlation with conventional
+Clutch than Ruane's RISP BPS (0.276 versus 0.289). The paired CV intervals
+do not establish a statistically significant performance difference
+between those models. The correlation gap itself was not formally tested.
+
 Among RISP-only models in the primary sample, CV R² rises from 0.074
 for binomial RISP (B1) to 0.081 for Ruane's raw BPS difference (A1) and
 0.092 for weighted multinomial RISP (W1). This ordering is consistent
@@ -120,6 +132,11 @@ transformation improves CV R² by .045 for hit rates and .034 for
 weighted production in the primary sample. At 3,000 PA the weighted
 gain falls to .010 and its paired interval spans zero. The binomial gain
 is positive with intervals above zero at all three cutoffs.
+
+The main contribution of binomial ON/OFF is the detection framework,
+its closed-form likelihood-ratio score, and the associated Bayesian upper
+limit. Benchmark agreement evaluates a separate property.
+[Derivations](appendix_c_mathematical_derivations.md)
 
 The closed-form B3 retains about 79% of W3's primary CV R²
 (.197/.249 using rounded values), with RMSE 2.504 versus 2.420.

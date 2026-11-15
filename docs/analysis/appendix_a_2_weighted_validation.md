@@ -1,5 +1,7 @@
 # Appendix A.2 — Weighted ON/OFF validation
 
+[Algebraic reduction to the binomial statistic in Appendix C](appendix_c_mathematical_derivations.md#c6--reduction-to-the-binomial-statistic).
+
 The weighted likelihood ratio compares weighted production means while
 allowing each group its own outcome distribution. See the
 [derivation and tolerances](../methodology/multinomial_on_off.md).

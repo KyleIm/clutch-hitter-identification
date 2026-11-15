@@ -18,6 +18,8 @@ score families against Baseball-Reference Clutch on identical validation folds.
 [Appendix B](analysis/appendix_b_benchmark_comparison.md) completes the empirical
 analyses with the Ruane BPS and raw performance benchmarks.
 
+[Appendix C](analysis/appendix_c_mathematical_derivations.md) consolidates the mathematical derivations for the main analysis and Appendix A.
+
 ### Deferred Joint RISP–LIPS Index
 
 The joint model remains deferred beyond the completed empirical analyses.
