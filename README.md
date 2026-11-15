@@ -157,10 +157,7 @@ These are observational comparisons. Opponent quality, parks, and player usage c
 | [Step 1](docs/analysis/01_risp_lips_correlation.md) | RISP–LIPS overlap, correlations, and Monte Carlo tests |
 | [Step 2](docs/analysis/02_upper_limit_analysis.md) | Bayesian upper limits and examples |
 | [Step 3](docs/analysis/03_external_benchmark.md) | WPA and Clutch benchmarks, regression, and overall batting dependence |
-| [Appendix A.1](docs/analysis/appendix_a_1_weighted_on_off.md) | Fixed weights and outcome counts |
-| [Appendix A.2](docs/analysis/appendix_a_2_weighted_validation.md) | Multinomial likelihood validation and calibration |
-| [Appendix A.3](docs/analysis/appendix_a_3_weighted_baseline.md) | Weighted scores and cutoff sensitivity |
-| [Appendix A.4](docs/analysis/appendix_a_4_weighted_benchmark.md) | Weighted external benchmark |
+| [Appendix A](docs/analysis/appendix_a_weighted_framework.md) | Weighted multinomial ON/OFF framework, validation, and benchmark |
 | [Appendix B](docs/analysis/appendix_b_benchmark_comparison.md) | Ruane BPS and raw-difference comparisons |
 
 ## Reproduction
