@@ -121,7 +121,7 @@ In 100,000 validation fits, the optimizer reported zero failures. At nominal 5%,
 
 The paired 95% bootstrap intervals supported a CV $R^2$ gain of 0.0526 [0.0277, 0.0775], an RMSE reduction of 0.0834 [0.0429, 0.1245], and an MAE reduction of 0.0713 [0.0324, 0.1107]. They use fixed out-of-fold predictions and omit full retraining variability. The binomial model retains about **79%** of the weighted model's CV $R^2$ and has a closed-form score and an existing upper-limit construction. The weighted model improves agreement, with the clearest reduction in overall batting dependence concentrated in weighted RISP. [Weighted external benchmark](docs/analysis/appendix_a_4_weighted_benchmark.md)
 
-## Appendix B — How does ON/OFF compare with simpler measures?
+## Appendix B — Comparison with Previous Clutch Hitting Research
 
 Tom Ruane's *In Search of Clutch Hitting* (2005) uses BPS, batting average plus slugging percentage. We adapt the unadjusted RISP-minus-non-RISP BPS difference to this study's period and sample, leaving Ruane's contextual checks outside the comparison. The raw models below use ON-minus-OFF differences without the signed likelihood-ratio transformation. [Ruane adaptation and original study](docs/analysis/appendix_b_benchmark_comparison.md#predictor-definitions)
 

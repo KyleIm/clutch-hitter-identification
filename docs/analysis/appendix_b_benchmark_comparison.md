@@ -1,4 +1,4 @@
-# Appendix B — Ruane BPS, raw differences, and ON/OFF scores
+# Appendix B — Comparison with Previous Clutch Hitting Research
 
 Appendix B compares 13 OLS models with intercepts against the 1998–2025
 Baseball-Reference period Clutch estimate. The primary sample comprises the
