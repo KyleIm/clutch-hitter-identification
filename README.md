@@ -1,10 +1,40 @@
-# A Method for Identifying Clutch Hitters
+# A Statistical ON/OFF Framework for Evaluating Clutch Hitting in Baseball
 
 ## What is a clutch hitter?
 
 A clutch hitter performs better in important situations relative to their own ordinary performance. A hitter can produce more than their peers in a key plate appearance while performing below their own usual level. This project separates those questions by comparing each hitter's performance with runners in scoring position (RISP) and in late-inning pressure situations (LIPS) with their performance outside each situation.
 
 The astrophysical ON/OFF framework gives each hitter their own baseline. For each situation, **ON** contains qualifying plate appearances and **OFF** contains the rest. A signed likelihood-ratio score measures evidence for improvement or decline while accounting for the number of observations and sampling variation. When the data do not establish a positive effect, a Bayesian upper limit describes how large a positive effect could still be. The aim is to reduce dependence on overall batting production while retaining a meaningful measure of situational performance.
+
+### Conventional Clutch Metrics and Research Motivation
+
+Win Probability Added (WPA) measures a player's contribution to winning as the change in Win Expectancy (WE) resulting from a play.
+
+```math
+WPA_i = WE_{i,\mathrm{after}} - WE_{i,\mathrm{before}}.
+```
+
+Win Expectancy is conventionally estimated from historical game outcomes conditional on the inning, score differential, and base-out state. The Leverage Index (LI) measures how much win expectancy can swing in a given situation relative to an average situation. [Win Expectancy — FanGraphs](https://library.fangraphs.com/misc/we/) · [WPA — FanGraphs](https://library.fangraphs.com/misc/wpa/) · [Leverage Index — FanGraphs](https://library.fangraphs.com/misc/li/)
+
+The conventional Clutch metric adjusts WPA for leverage.
+
+```math
+\mathrm{Clutch} =
+\frac{\sum_i WPA_i}{\overline{LI}} -
+\sum_i \frac{WPA_i}{LI_i}.
+```
+
+Here, $\overline{LI}$ is the player's average Leverage Index, and $LI_i$ is the index for play $i$. Clutch compares performance in context with the player's own leverage-neutral contribution. It depends on the underlying Win Expectancy estimates and does not directly quantify the statistical significance of an observed improvement in batting performance. [Clutch — FanGraphs](https://library.fangraphs.com/misc/clutch/)
+
+The ON/OFF framework directly compares a hitter's observed batting outcomes in important situations with their outcomes outside those situations. Its binomial and multinomial likelihoods provide
+
+- An explicit statistical hypothesis about situational performance differences.
+- A signed likelihood-ratio statistic that accounts for sampling fluctuations.
+- An analytically derived asymptotic reference distribution under regularity conditions.
+- Bayesian upper limits on undetected positive effects in the binomial model.
+
+The framework complements WPA by evaluating situational batting performance independently of Win Expectancy estimates.
+
 
 ## Data and statistical framework
 
@@ -76,7 +106,7 @@ At PA ≥ 2,000, the median conditional upper limit among players with $S<3$ was
 
 ## Step 3 — How does ON/OFF compare with conventional Clutch?
 
-Win Probability Added (WPA) sums the change in win probability attributed to a hitter's plays, so it reflects both what the hitter did and when it happened. Conventional Clutch uses leverage normalization to compare performance in context with a hitter's overall contribution. This project benchmarks against **Baseball-Reference**. Period WPA sums the published season values, and period Clutch is estimated as period WPA divided by a Plays-weighted average leverage index, minus summed season WPA/LI. The estimate inherits rounding from the source. [Benchmark construction](Data/BaseballReference/README.md#how-period-clutch-was-estimated)
+This project benchmarks WPA and Clutch against **Baseball-Reference**. Period WPA sums the published season values, and period Clutch is estimated as period WPA divided by a Plays-weighted average leverage index, minus summed season WPA/LI. The estimate inherits rounding from the source. [Benchmark construction](Data/BaseballReference/README.md#how-period-clutch-was-estimated)
 
 ### External benchmark correlations
 
@@ -110,7 +140,7 @@ Controlling for log(PA) left WPA strongly associated with OPS+ (0.812) and wRC+ 
 
 ### Why is benchmark agreement limited?
 
-The binomial model gives every hit equal weight and omits walks and hit-by-pitches, losing information on batting production. Appendix A tests whether retaining that information improves benchmark agreement. A second limitation is situational resolution. Conventional Clutch uses a continuous Leverage Index, while binary RISP and LIPS categories pool different base-out configurations, innings, and score margins. These are plausible sources of disagreement. The results do not decompose the unexplained variance between them.
+The binomial model gives every hit equal weight and omits walks and hit-by-pitches, losing information on batting production. Appendix A tests whether retaining that information improves benchmark agreement. A second limitation is situational resolution. Conventional Clutch incorporates play-specific Leverage Index values, whereas our ON/OFF framework classifies plate appearances into binary RISP and LIPS categories. Each category pools different base-out configurations, innings, and score margins. These are plausible sources of disagreement. The results do not decompose the unexplained variance between them.
 
 ## Appendix A — Does a weighted model improve benchmark agreement?
 
