@@ -130,3 +130,7 @@ and persistence require separate evidence.
 python Script/analyze_weighted_benchmark.py --bootstrap 10000
 python -m unittest discover -s tests
 ```
+
+The [Step 3 extension](03_external_benchmark.md#dependence-on-overall-batting-performance)
+compares the weighted ON/OFF scores' dependence on overall batting
+production with the corresponding binomial scores, WPA, and Clutch.

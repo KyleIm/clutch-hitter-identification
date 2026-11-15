@@ -1,0 +1,13 @@
+min_pa,metric,candidates,complete_cases,missing,source_pa_available,pa_discrepancies,pa_delta_min,pa_delta_max,ops_plus_missing_rows,ops_plus_missing_metric_seasons,ops_plus_extra_positive_pa_seasons,wrc_plus_missing_rows,wrc_plus_missing_metric_seasons,wrc_plus_extra_positive_pa_seasons
+1000,overall_hit_rate,1343,1342,0,0,0,,,,,,,,
+1000,overall_weighted_production,1343,1342,0,0,0,,,,,,,,
+1000,ops_plus,1343,1342,1,1343,144,0.0,13.0,0.0,1.0,0.0,,,
+1000,wrc_plus,1343,1342,0,1343,153,-1.0,13.0,,,,0.0,0.0,0.0
+2000,overall_hit_rate,861,861,0,0,0,,,,,,,,
+2000,overall_weighted_production,861,861,0,0,0,,,,,,,,
+2000,ops_plus,861,861,0,861,119,0.0,13.0,0.0,0.0,0.0,,,
+2000,wrc_plus,861,861,0,861,126,-1.0,13.0,,,,0.0,0.0,0.0
+3000,overall_hit_rate,595,595,0,0,0,,,,,,,,
+3000,overall_weighted_production,595,595,0,0,0,,,,,,,,
+3000,ops_plus,595,595,0,595,96,0.0,13.0,0.0,0.0,0.0,,,
+3000,wrc_plus,595,595,0,595,103,-1.0,13.0,,,,0.0,0.0,0.0

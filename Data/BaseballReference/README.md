@@ -39,3 +39,22 @@ python Script/aggregate_bbref_wpa.py ../bref-seasons
 - [Matched period statistics](bbref_1998_2025_wpa_matched.csv) combine those Baseball-Reference season values with Retrosheet plate appearance counts and Chadwick player IDs. Period WPA is a sum of published season values. Period Clutch is estimated as described above.
 
 Baseball-Reference is published by Sports Reference LLC. Consult its terms for further reuse. [Sports Reference Terms of Use](https://www.sports-reference.com/termsofuse.html)
+
+## Step 3 extension · OPS+
+
+The extension reads the MLB regular-season Player Standard Batting table
+for each of 1998–2025. It uses the displayed OPS+ integer and the same
+row's PA. Team stints and league subtotals marked partial are discarded.
+The period estimate is the PA-weighted mean of the displayed season
+values. It inherits their rounding and can differ from an OPS+ computed
+from pooled components and full-period adjustments.
+
+The original files were retrieved on November 15, 2026. Save the
+[season batting pages](https://www.baseball-reference.com/leagues/majors/1998-standard-batting.shtml#players_standard_batting)
+as bb-YEAR.html and run the combined preparation command in the
+[Step 3 report](../../docs/analysis/03_external_benchmark.md#dependence-on-overall-batting-performance).
+The resulting ops_plus_1998_2025_seasons.csv and
+ops_plus_1998_2025_period.csv record the source fields and the matched
+period estimates. The Chadwick mapping and Retrosheet seasons determine
+coverage. Missing expected rows, missing indexes in positive-PA seasons,
+or unexpected positive-PA seasons leave the period index blank.

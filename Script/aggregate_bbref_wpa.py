@@ -19,8 +19,10 @@ FIELDS = {
 
 
 class PlayerTable(HTMLParser):
-    def __init__(self):
+    def __init__(self, table=TABLE, fields=FIELDS):
         super().__init__()
+        self.table = table
+        self.fields = fields
         self.in_table = False
         self.row = {}
         self.field = None
@@ -28,14 +30,14 @@ class PlayerTable(HTMLParser):
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
-        if tag == "table" and attrs.get("id") == TABLE:
+        if tag == "table" and attrs.get("id") == self.table:
             self.in_table = True
         if not self.in_table:
             return
         if tag == "tr":
             self.row = {"partial": "partial_table" in attrs.get("class", "").split()}
         if tag in ("td", "th"):
-            self.field = FIELDS.get(attrs.get("data-stat"))
+            self.field = self.fields.get(attrs.get("data-stat"))
             if self.field:
                 self.row[self.field] = ""
             if self.field == "bbref_name":

@@ -4,6 +4,8 @@
 - [Step 2 — Bayesian binomial upper limits](analysis/02_upper_limit_analysis.md) is complete.
 - [Step 3 — Baseball-Reference external benchmark](analysis/03_external_benchmark.md) is complete.
 
+- The [Step 3 overall batting performance extension](analysis/03_external_benchmark.md#dependence-on-overall-batting-performance) is complete.
+
 ## Appendix A — Weighted ON/OFF Framework
 
 [Appendix A.1](analysis/appendix_a_1_weighted_on_off.md) established the fixed weights and

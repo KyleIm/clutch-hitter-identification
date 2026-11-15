@@ -203,3 +203,138 @@ different evidence.
 python Script/analyze_clutch_regression.py
 python -m unittest discover -s tests
 ```
+
+## Dependence on overall batting performance
+
+A player can generate substantial WPA through strong batting across
+situations. The ON/OFF scores instead compare each player's batting
+with their own OFF-situation baseline. This extension examines how
+much association with overall batting remains in those scores and
+in the Baseball-Reference period Clutch estimate.
+
+### Data and analysis
+
+The overall eligible hit rate pools hits and eligible trials across
+ON and OFF. The overall weighted production pools all seven outcome
+counts, multiplies them by the fixed weights, and divides by total
+weighted-eligible PA. These denominators follow the existing binomial
+and [Appendix A.1](appendix_a_1_weighted_on_off.md) eligibility rules.
+
+OPS+ uses the displayed Baseball-Reference season totals. wRC+ uses
+the FanGraphs single-season leaderboard for each of the same 28 MLB
+regular seasons (1998–2025). FanGraphs required membership for the
+combined 28-season request. Each period estimate weights the season
+index by the PA from that source and divides by its summed PA.
+These approximations can differ from indexes calculated directly for
+the full period. Baseball-Reference OPS+ also inherits published
+rounding. The Chadwick mappings join both sources by player ID and
+the Retrosheet season extracts verify which seasons are expected.
+[OPS+ source and preparation](../../Data/BaseballReference/README.md#step-3-extension--ops) ·
+[wRC+ source and preparation](../../Data/FanGraphs/README.md#step-3-extension--wrc)
+
+| Minimum Retrosheet PA | Candidates | Common complete cases | OPS+ PA differences | wRC+ PA differences |
+|---:|---:|---:|---:|---:|
+| 1,000 | 1,343 | 1,342 | 144 | 153 |
+| 2,000 | 861 | 861 | 119 | 126 |
+| 3,000 | 595 | 595 | 96 | 103 |
+
+One player, Joey Gathright, has a blank published OPS+ in his
+one-PA 2011 season. He is excluded from all comparisons at 1,000 PA.
+All other players in the cutoff samples have full coverage for both
+indexes. Difference counts use the candidate samples, including
+Gathright. At 2,000 PA source-minus-Retrosheet PA ranges from 0 to
+13 for OPS+ and −1 to 13 for wRC+. Retrosheet PA defines the cutoffs,
+log(PA) control, and per-600 scaling. Across all 5,716 players, 5,535
+have a complete OPS+ estimate and 5,716 have a complete wRC+ estimate.
+The primary sample correlation between the two indexes is Pearson
+0.995 and Spearman 0.994. The indexes summarize closely related
+overall performance in this sample.
+
+We use identical complete cases for every correlation and sensitivity
+analysis at each cutoff. For partial Pearson correlations, we regress
+both variables on log(Retrosheet PA) with an intercept, then correlate
+the residuals. Sensitivities also use WPA and Clutch per 600 PA and raw
+ON-minus-OFF hit rates and weighted production. The signed scores keep
+their original scale. Per-600 rates and raw differences also have
+partial Pearson and rank results in the correlation file.
+
+Each of 10,000 paired bootstrap draws resamples player rows with
+replacement at the cutoff (seed 20261114). Ranks and PA adjustments
+are recalculated inside each draw. Correlation intervals are nominal
+95% percentile intervals. For each contrast the bootstrap estimates
+|r(benchmark, overall)| minus |r(ON/OFF, overall)|. The primary
+family comprises the 16 Pearson contrasts against Clutch at 2,000 PA
+(four signed scores by four overall metrics). It uses
+Bonferroni-adjusted percentile intervals at 95% familywise confidence.
+WPA comparisons, other cutoffs, and rank and PA-adjusted comparisons
+are exploratory and use nominal intervals.
+
+### Primary sample results
+
+| Situational metric | Overall hit rate | Weighted production | OPS+ | wRC+ |
+|---|---:|---:|---:|---:|
+| WPA | 0.506 | 0.839 | 0.840 | 0.838 |
+| Clutch | 0.001 | −0.271 | −0.262 | −0.253 |
+| Binomial RISP | 0.028 | 0.061 | 0.116 | 0.117 |
+| Binomial LIPS | −0.102 | −0.149 | −0.158 | −0.156 |
+| Weighted RISP | 0.009 | 0.017 | 0.052 | 0.061 |
+| Weighted LIPS | −0.148 | −0.195 | −0.193 | −0.186 |
+
+Five of the 16 adjusted intervals lie entirely above zero. For
+overall weighted production, the magnitude gap is 0.211
+([0.064, 0.342]) for binomial RISP, 0.122 ([0.016, 0.224]) for
+binomial LIPS, and 0.254 ([0.100, 0.346]) for weighted RISP.
+Weighted RISP also shows a smaller absolute correlation than
+Clutch with OPS+ (gap 0.210, [0.057, 0.338]) and wRC+ (0.192,
+[0.037, 0.327]). The remaining adjusted intervals include zero.
+
+WPA has strong positive associations with OPS+, wRC+, and weighted
+production. Clutch reduces those associations in magnitude, with
+moderate negative coefficients. The four signed scores have smaller
+point-estimate magnitudes than Clutch on those three measures. The
+hit-rate comparison differs. Clutch is essentially uncorrelated
+with overall hit rate and every signed score has a larger estimated
+magnitude, with no clear differences after multiplicity adjustment.
+Weighted RISP shows the clearest reduction in association with
+overall batting. Weighted LIPS tends to be more strongly associated
+than binomial LIPS at this cutoff.
+
+Controlling for log(PA) leaves WPA strongly related to the three
+broader production measures (partial Pearson 0.805–0.812). On OPS+,
+Clutch moves from −0.262 to −0.219, binomial RISP from 0.116 to
+0.128, and binomial LIPS from −0.158 to −0.108. The same ordering
+of magnitudes holds for those three measures after PA control.
+WPA per 600 is even more strongly associated with OPS+ and wRC+
+(0.920 and 0.924). Clutch per 600 is less strongly associated
+with them (−0.188 and −0.179). Raw ON/OFF differences also show
+modest correlations, with primary Pearson magnitudes at most 0.164
+across all four overall metrics.
+
+These descriptive associations complement the positive associations
+of the signed scores with Clutch reported in Step 3 and
+[Appendix A.4](appendix_a_4_weighted_benchmark.md). Weak correlation
+with overall production cannot establish independence or superior
+validity. Sample size and binomial variance influence the signed
+likelihood ratio, and opponent quality, parks, and usage can still
+confound these observational comparisons.
+
+### Outputs and reproduction
+
+- Matched player results are generated locally at Results/External_Benchmark/Batting_Performance/players.csv.
+- [Coverage and PA discrepancies](../../Results/External_Benchmark/Batting_Performance/coverage.csv)
+- [Correlations, including PA sensitivities](../../Results/External_Benchmark/Batting_Performance/correlations.csv)
+- [Paired bootstrap contrasts](../../Results/External_Benchmark/Batting_Performance/bootstrap_comparisons.csv)
+- [Pearson heatmap](../../Results/External_Benchmark/Batting_Performance/figures/pearson_heatmap.png) · [Spearman heatmap](../../Results/External_Benchmark/Batting_Performance/figures/spearman_heatmap.png)
+- [OPS+ and wRC+ scatter plots](../../Results/External_Benchmark/Batting_Performance/figures/index_scatter.png) · [Correlation intervals](../../Results/External_Benchmark/Batting_Performance/figures/correlation_intervals.png)
+- [Before and after PA control](../../Results/External_Benchmark/Batting_Performance/figures/before_after_pa_control.png) · [PA cutoff sensitivity](../../Results/External_Benchmark/Batting_Performance/figures/cutoff_sensitivity.png)
+
+From the repository root, point preparation at a directory containing
+the saved bb-YEAR.html and wrc-YEAR.csv files for 1998–2025. It uses the
+existing Baseball-Reference mapping and the local FanGraphs Chadwick
+crosswalk, which can also be supplied with --fangraphs-mapping.
+
+```bash
+python Script/prepare_batting_performance.py ../season-inputs
+python Script/analyze_batting_performance_dependence.py
+python -m unittest discover -s tests
+```

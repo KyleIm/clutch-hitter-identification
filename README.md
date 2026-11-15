@@ -123,6 +123,16 @@ R² = 0.201 in sample. Five-fold validation yielded r = 0.443 and R² =
 0.197, compared with R² = 0.123 for LIPS alone.
 [Regression extension](docs/analysis/03_external_benchmark.md#regression-extension)
 
+### Overall batting performance dependence
+
+At 2,000 PA, WPA correlates about 0.84 with both OPS+ and wRC+.
+The Clutch estimates have weaker negative correlations (−0.262 and
+−0.253), and the ON/OFF scores have smaller point-estimate magnitudes
+on these broader production indexes. The overall hit-rate results
+show a different pattern. Adjusted comparisons most clearly support
+a reduction for weighted RISP.
+[Step 3 extension](docs/analysis/03_external_benchmark.md#dependence-on-overall-batting-performance)
+
 ### Weighted baseline
 
 The original and weighted analyses use 4,569,453 and 5,019,958 eligible
