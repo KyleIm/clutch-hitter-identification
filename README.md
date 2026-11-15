@@ -16,7 +16,7 @@ Singles, doubles, triples, and home runs count as successes. Outs, reaching on a
 For each group $j$, the model is $H_j \sim \mathrm{Binomial}(T_j,p_j)$, where $H_j$ is hits and $T_j$ is eligible trials. The null uses a common hit probability. The alternative fits separate ON and OFF probabilities. With $\ell_0$ and $\ell_1$ the respective maximized log likelihoods, the score is
 
 ```math
-S = \operatorname{sgn}(\widehat p_{\mathrm{ON}}-\widehat p_{\mathrm{OFF}})
+S = \mathrm{sgn}(\widehat p_{\mathrm{ON}}-\widehat p_{\mathrm{OFF}})
     \sqrt{2(\ell_1-\ell_0)}.
 ```
 
