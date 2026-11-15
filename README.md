@@ -24,9 +24,11 @@ S = \mathrm{sgn}(\widehat p_{\mathrm{ON}}-\widehat p_{\mathrm{OFF}})
 
 The construction follows Li–Ma's ON/OFF framing and signed likelihood-ratio approach, with a binomial likelihood for batting trials in place of the original Poisson counts. The squared score is the standard two-proportion likelihood-ratio $G$ statistic. The contribution is applying that test and pairing it with upper limits for situational batting effects. [Binomial derivation and Li–Ma reference](docs/analysis/appendix_c_mathematical_derivations.md#c2--derivation-of-the-binomial-onoff-statistic)
 
-## Step 1 — Is there evidence for general clutch ability?
+## Baseline Results
 
-If the same ability carries over between situations, hitters who improve in RISP should also tend to improve in LIPS. A PA can qualify for both, so the analysis uses overlap-aware Monte Carlo simulations that preserve each player's observed sample sizes and RISP/LIPS overlap under a common within-player hit probability.
+### Interpretation of the score distributions
+
+Under the null hypothesis of equal ON and OFF hit probabilities, the signed likelihood-ratio statistic asymptotically follows a standard normal distribution under regularity conditions. The pooled hit rates below use all eligible trials. The score summaries use players with at least 2,000 PA. [Asymptotic derivation](docs/analysis/appendix_c_mathematical_derivations.md#c3--asymptotic-distribution-and-statistical-interpretation)
 
 | Baseline measure | RISP | LIPS |
 |---|---:|---:|
@@ -35,6 +37,24 @@ If the same ability carries over between situations, hitters who improve in RISP
 | Mean signed score, PA ≥ 2,000 | −0.212 | −0.989 |
 | Signed score SD, PA ≥ 2,000 | 1.051 | 1.079 |
 
+![RISP signed-score distribution at PA ≥ 2,000](binomial_onoff_risp_histogram_1998_2025_pa2000.png)
+
+![LIPS signed-score distribution at PA ≥ 2,000](binomial_onoff_lips_histogram_1998_2025_pa2000.png)
+
+Both distributions have standard deviations close to one. The LIPS distribution has a substantial negative shift. [Baseline analysis](docs/analysis/00_baseline_analysis.md)
+
+### Why is the LIPS distribution shifted toward negative values?
+
+Teams may deploy their strongest relievers more frequently in close late-inning games, and opposing managers may select pitchers to exploit favorable matchups. Both practices could make the opposition systematically stronger in LIPS than outside LIPS.
+
+The shift could therefore reflect differences in the competitive environment. The study did not directly test pitcher deployment, matchup selection, or hitters’ psychological response to pressure. The aggregate shift alone provides insufficient evidence that most hitters have negative clutch ability.
+
+Despite the different means, do hitters who perform relatively well in RISP also perform relatively well in LIPS? Step 1 addresses that question by testing the association between the two scores while accounting for shared plate appearances.
+
+## Step 1 — Is there evidence for general clutch ability?
+
+If the same ability carries over between situations, hitters who improve in RISP should also tend to improve in LIPS. A PA can qualify for both, so the analysis uses overlap-aware Monte Carlo simulations that preserve each player's observed sample sizes and RISP/LIPS overlap under a common within-player hit probability.
+
 ![RISP and LIPS signed-score distributions across PA cutoffs](Results/RISP_LIPS/figures/boxplot.png)
 
 | RISP–LIPS score correlation, PA ≥ 2,000 | Observed | Simulated null mean | One-sided Monte Carlo p |
@@ -42,7 +62,7 @@ If the same ability carries over between situations, hitters who improve in RISP
 | Pearson | 0.0043 | −0.0018 | 0.432 |
 | Spearman | 0.0109 | −0.0016 | 0.359 |
 
-Observed correlations were near zero across the PA cutoffs and did not show significant positive excess over the simulated null. LIPS scores were shifted downward across all three cutoffs. Stronger relief pitching and matchup-based opponent selection could contribute to that shift, a hypothesis the analysis did not test. The findings give no evidence of a shared RISP–LIPS ability under this test and leave room for individual or situation-specific effects. [Baseline distributions](docs/analysis/00_baseline_analysis.md) · [Overlap-aware Monte Carlo analysis](docs/analysis/01_risp_lips_correlation.md)
+Observed correlations were near zero across the PA cutoffs and did not show significant positive excess over the simulated null. The findings give no evidence of a shared RISP–LIPS ability under this test and leave room for individual or situation-specific effects. [Overlap-aware Monte Carlo analysis](docs/analysis/01_risp_lips_correlation.md)
 
 ## Step 2 — How large could an undetected clutch effect be?
 
