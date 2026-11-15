@@ -1,203 +1,171 @@
-# A Method for Identifying Clutch Hitters
+# What is a clutch hitter?
 
-## Project Overview
+A clutch hitter performs better in important situations relative to their own ordinary performance. A hitter can produce more than their peers in a key plate appearance while performing below their own usual level. This project separates those questions by comparing each hitter's performance with runners in scoring position (RISP) and in late-inning pressure situations (LIPS) with their performance outside each situation.
 
-How does a hitter’s performance change in different game situations? This
-project adapts the astrophysical ON/OFF framework to compare each hitter’s
-hit rate in a defined situation with their hit rate in all other situations.
+The astrophysical ON/OFF framework gives each hitter their own baseline. For each situation, **ON** contains qualifying plate appearances and **OFF** contains the rest. A signed likelihood-ratio score measures evidence for improvement or decline while accounting for the number of observations and sampling variation. When the data do not establish a positive effect, a Bayesian upper limit describes how large a positive effect could still be. The aim is to reduce dependence on overall batting production while retaining a meaningful measure of situational performance.
 
-## Dataset
+## Data and statistical framework
 
-The 1998–2025 Retrosheet play-by-play extracts cover **5,716 hitters** and
-**4,569,453 eligible batting trials**. The primary analysis includes 861 hitters
-with at least 2,000 career plate appearances (PA).
+The study uses Retrosheet play-by-play from the **1998–2025** MLB regular seasons, covering **5,716 hitters** and **4,569,453 binomial-eligible batting trials**. The total plate appearance (PA) cutoffs are 1,000, 2,000, and 3,000. The primary sample contains **861 hitters with at least 2,000 PA** within the study period. Total PA includes excluded events.
 
-- **RISP (runners in scoring position)** means a runner is on second or third before the final pitch.
-- **LIPS (late-inning pressure situations)** means the seventh inning or later, with the batting team ahead by one, tied, or trailing by up to three. A four-run deficit also qualifies if the bases are loaded at the start of the PA.
+- **RISP** means a runner is on second or third before the final pitch.
+- **LIPS** means the seventh inning or later, with the batting team ahead by one, tied, or trailing by up to three runs. A four-run deficit also qualifies if the bases are loaded at the start of the plate appearance.
 
-## Statistical Methodology
+Singles, doubles, triples, and home runs count as successes. Outs, reaching on a fielding error, fielder's choices, and sacrifice flies count as failures. Walks (including intentional walks), hit-by-pitches, catcher interference, and sacrifice bunts are excluded. Including sacrifice flies makes the denominator differ from official at-bats. A score requires eligible trials in both groups.
 
-The signed binomial ON/OFF score is the square root of the standard
-two-proportion likelihood-ratio G statistic, with the sign of the ON-minus-OFF
-hit-rate difference. It uses the astrophysical ON/OFF comparison with a
-binomial likelihood for hits and failures. See the [mathematical derivation](docs/methodology/binomial_on_off.md).
+For each group $j$, the model is $H_j \sim \mathrm{Binomial}(T_j,p_j)$, where $H_j$ is hits and $T_j$ is eligible trials. The null uses a common hit probability. The alternative fits separate ON and OFF probabilities. With $\ell_0$ and $\ell_1$ the respective maximized log likelihoods, the score is
 
-### Detection and upper limits
+```math
+S = \operatorname{sgn}(\widehat p_{\mathrm{ON}}-\widehat p_{\mathrm{OFF}})
+    \sqrt{2(\ell_1-\ell_0)}.
+```
 
-The signed binomial ON/OFF score adapts the Li–Ma detection framework
-to situational hit rates. Step 2 adds a Zech-inspired Bayesian binomial
-upper limit on the ON-minus-OFF hit-rate difference. The 95% limit
-bounds the effect conditional on it being positive. The posterior
-probability of a positive effect is reported separately.
-[Derivation](docs/methodology/binomial_upper_limit.md) ·
-[Step 2 results](docs/analysis/02_upper_limit_analysis.md)
+The construction follows Li–Ma's ON/OFF framing and signed likelihood-ratio approach, with a binomial likelihood for batting trials in place of the original Poisson counts. The squared score is the standard two-proportion likelihood-ratio $G$ statistic. The contribution is applying that test and pairing it with upper limits for situational batting effects. [Binomial derivation and Li–Ma reference](docs/methodology/binomial_on_off.md)
 
-### Weighted ON/OFF framework
+## Step 1 — Is there evidence for general clutch ability?
 
-The original binomial model gives every hit a value of 1 and excludes
-walks and hit-by-pitches. The weighted framework includes unintentional
-walks and hit-by-pitches and gives each hit type its own weight.
+If the same ability carries over between situations, hitters who improve in RISP should also tend to improve in LIPS. A PA can qualify for both, so the analysis uses overlap-aware Monte Carlo simulations that preserve each player's observed sample sizes and RISP/LIPS overlap under a common within-player hit probability.
 
-A representative set of Baseball-Reference batting outcome weights for
-1998–2025 could not be obtained. The study adopts the fixed weights from
-FanGraphs Basic wOBA and retains Baseball-Reference Clutch as the external
-benchmark.
-
-| Batting outcome | Original binomial weight | New fixed weight |
+| Baseline measure | RISP | LIPS |
 |---|---:|---:|
-| Out / ROE | 0 | 0.00 |
-| Unintentional BB | Excluded | 0.70 |
-| HBP | Excluded | 0.70 |
+| Pooled hit rate, all eligible trials | 25.28% | 24.14% |
+| Pooled hit rate outside the situation, all eligible trials | 25.62% | 25.81% |
+| Mean signed score, PA ≥ 2,000 | −0.212 | −0.989 |
+| Signed score SD, PA ≥ 2,000 | 1.051 | 1.079 |
+
+![RISP and LIPS signed-score distributions across PA cutoffs](Results/RISP_LIPS/figures/boxplot.png)
+
+| RISP–LIPS score correlation, PA ≥ 2,000 | Observed | Simulated null mean | One-sided Monte Carlo p |
+|---|---:|---:|---:|
+| Pearson | 0.0043 | −0.0018 | 0.432 |
+| Spearman | 0.0109 | −0.0016 | 0.359 |
+
+Observed correlations were near zero across the PA cutoffs and did not show significant positive excess over the simulated null. LIPS scores were shifted downward across all three cutoffs. Stronger relief pitching and matchup-based opponent selection could contribute to that shift, a hypothesis the analysis did not test. The findings give no evidence of a shared RISP–LIPS ability under this test and leave room for individual or situation-specific effects. [Baseline distributions](docs/analysis/00_baseline_analysis.md) · [Overlap-aware Monte Carlo analysis](docs/analysis/01_risp_lips_correlation.md)
+
+## Step 2 — How large could an undetected clutch effect be?
+
+The absence of a detected positive effect leaves a practical question about its possible size. With independent uniform priors on the ON and OFF hit probabilities, the data give two beta posteriors. We form the posterior of $\delta=p_{\mathrm{ON}}-p_{\mathrm{OFF}}$ and take its 95th percentile conditional on $\delta\geq0$. Zech (1989) motivates normalization over a nonnegative signal region. Kawasaki and Miyaoka (2010) derive the posterior for a difference of binomial proportions. [Derivation and references](docs/methodology/binomial_upper_limit.md)
+
+Three quantities answer distinct questions. The signed score measures evidence against equal rates. $P(\delta>0\mid D)$ measures posterior support for a positive effect. The upper limit solves $P(\delta\leq U\mid D,\delta\geq0)=0.95$ and bounds its size conditional on its being positive. This is a conditional Bayesian credible limit, with no guarantee of 95% repeated-sampling coverage.
+
+At PA ≥ 2,000, the median conditional upper limit among players with $S<3$ was **3.17 percentage points for RISP** (859 players) and **2.91 for LIPS** (861 players). This subset also includes significant negative effects. In RISP, Brendan Donovan and Todd Helton both had near-zero scores, but their limits were 5.52 and 2.16 percentage points with 384 and 2,067 ON trials, respectively. Casey Blake's RISP limit was tighter at 1.18 percentage points, while his posterior probability of a positive effect was only 0.00103. [Upper-limit results](docs/analysis/02_upper_limit_analysis.md)
+
+![Representative posterior densities and conditional 95% upper limits](Results/Upper_Limits/figures/posterior_examples.png)
+
+## Step 3 — How does ON/OFF compare with conventional Clutch?
+
+Win Probability Added (WPA) sums the change in win probability attributed to a hitter's plays, so it reflects both what the hitter did and when it happened. Conventional Clutch uses leverage normalization to compare performance in context with a hitter's overall contribution. This project benchmarks against **Baseball-Reference**. Period WPA sums the published season values, and period Clutch is estimated as period WPA divided by a Plays-weighted average leverage index, minus summed season WPA/LI. The estimate inherits rounding from the source. [Benchmark construction](Data/BaseballReference/README.md#how-period-clutch-was-estimated)
+
+### External benchmark correlations
+
+| Signed score, PA ≥ 2,000 | Pearson r with WPA | Pearson r with Clutch | Spearman ρ with Clutch |
+|---|---:|---:|---:|
+| RISP | 0.152 | 0.276 | 0.259 |
+| LIPS | −0.110 | 0.354 | 0.359 |
+
+By incorporating inning and score margin, LIPS may capture some of the context that drives leverage. The prespecified one-sided Williams test favored a stronger Pearson association between LIPS and Clutch ($p=0.041$). The two-sided paired bootstrap interval for the Pearson difference included zero [−0.013, 0.167], while the corresponding Spearman interval excluded zero [0.011, 0.188]. [Step 3 correlation analysis](docs/analysis/03_external_benchmark.md#correlations-and-primary-hypothesis)
+
+### Combined RISP and LIPS model
+
+The two scores correlate near zero with one another, yet each correlates positively with Clutch. A linear regression combining them reached an in-sample $R^2$ of 0.201 and a five-fold out-of-fold $R^2$ of **0.197**, compared with 0.074 for RISP alone and 0.123 for LIPS alone. The folds hold out players within the same historical window, so they evaluate agreement for held-out players and provide no estimate of future-season prediction performance. [Regression extension](docs/analysis/03_external_benchmark.md#regression-extension)
+
+### Dependence on overall batting production
+
+The pooled Retrosheet hit rate and fixed-weight production use each model's eligible trials. Period OPS+ and wRC+ are PA-weighted approximations of season indexes from Baseball-Reference and FanGraphs, respectively. All four measures are available for the same 861 hitters at the primary cutoff.
+
+| Pearson r, PA ≥ 2,000 | Eligible hit rate | Weighted production | OPS+ | wRC+ |
+|---|---:|---:|---:|---:|
+| WPA | 0.506 | 0.839 | 0.840 | 0.838 |
+| Clutch | 0.001 | −0.271 | −0.262 | −0.253 |
+| Binomial RISP | 0.028 | 0.061 | 0.116 | 0.117 |
+| Binomial LIPS | −0.102 | −0.149 | −0.158 | −0.156 |
+| Weighted RISP | 0.009 | 0.017 | 0.052 | 0.061 |
+| Weighted LIPS | −0.148 | −0.195 | −0.193 | −0.186 |
+
+WPA was strongly associated with the three broader production measures. Clutch had weaker, negative correlations with those measures, and all four ON/OFF scores had smaller point-estimate magnitudes. Clutch was almost uncorrelated with overall hit rate. After adjustment for 16 comparisons, the supported reductions in absolute correlation were binomial RISP, binomial LIPS, and weighted RISP against overall weighted production, and weighted RISP against OPS+ and wRC+.
+
+Controlling for log(PA) left WPA strongly associated with OPS+ (0.812) and wRC+ (0.810). For OPS+, the partial correlations were −0.219 for Clutch, 0.128 for binomial RISP, and −0.108 for binomial LIPS. Per-600 PA results also retained the stronger WPA association. These comparisons support reduced dependence in some settings. They do not establish independence from batting ability or superior measurement validity. [Batting performance extension](docs/analysis/03_external_benchmark.md#dependence-on-overall-batting-performance)
+
+### Why is benchmark agreement limited?
+
+The binomial model gives every hit equal weight and omits walks and hit-by-pitches, losing information on batting production. Appendix A tests whether retaining that information improves benchmark agreement. A second limitation is situational resolution. Conventional Clutch uses a continuous Leverage Index, while binary RISP and LIPS categories pool different base-out configurations, innings, and score margins. These are plausible sources of disagreement. The results do not decompose the unexplained variance between them.
+
+## Appendix A — Does a weighted model improve benchmark agreement?
+
+The weighted model uses fixed Basic wOBA coefficients to represent the production value of different outcomes. Jeff Zimmerman reported $R^2=0.986$ between Basic wOBA and actual wOBA for hitters with more than 200 PA since 1980. [Basic wOBA Equation (2015)](https://blogs.fangraphs.com/instagraphs/basic-woba-equation/)
+
+| Batting outcome | Binomial value | Fixed weighted value |
+|---|---:|---:|
+| Out / reached on error | 0 | 0.00 |
+| Unintentional walk | Excluded | 0.70 |
+| Hit-by-pitch | Excluded | 0.70 |
 | Single | 1 | 0.90 |
 | Double | 1 | 1.25 |
 | Triple | 1 | 1.60 |
 | Home run | 1 | 2.00 |
 
-Jeff Zimmerman (2015), [Basic wOBA Equation](https://blogs.fangraphs.com/instagraphs/basic-woba-equation/), FanGraphs, May 14, 2015.
-Zimmerman reported R² = 0.986 between Basic wOBA and actual wOBA for
-players with more than 200 plate appearances since 1980, supporting the
-use of fixed coefficients across seasons.
+The weighted mean is the sum of each outcome's weight times its count, divided by weighted-eligible PA. Intentional walks, sacrifice bunts, and catcher interference remain excluded. The measure uses project-specific eligibility and the same weights in every season, unlike official season-specific wOBA. The multinomial null constrains the ON and OFF **weighted means** to agree while allowing different outcome distributions. The constrained optimization adds complexity, and binary outcome weights recover the binomial statistic. [Outcome weights](docs/analysis/appendix_a_1_weighted_on_off.md) · [Multinomial derivation](docs/methodology/multinomial_on_off.md)
 
-The framework adapts Basic wOBA by using its published coefficients with
-the project's own eligible PA definition. Intentional walks, sacrifice
-bunts, and catcher interference are excluded. Sacrifice flies and
-reaching on error count as zero. All singles receive the published
-single weight of 0.90.
+In 100,000 validation fits, the optimizer reported zero failures. At nominal 5%, null rejection ranged from 4.57% to 5.24% across the five realistic configurations and fell to 1.63% in the sparse case. The weighted baseline included 5,019,958 eligible PA. At the primary cutoff, the mean RISP score shifted from −0.212 to +0.102, while the mean LIPS score remained negative (−0.989 to −1.009). [Validation](docs/analysis/appendix_a_2_weighted_validation.md) · [Weighted baseline](docs/analysis/appendix_a_3_weighted_baseline.md)
 
-For each ON or OFF sample, weighted batting production is
-
-```text
-μ = Σᵢ wᵢpᵢ = (Σᵢ wᵢNᵢ)/T
-```
-
-Here `Nᵢ` is the outcome count, `T` is the total number of eligible trials,
-and `pᵢ = Nᵢ/T`. The raw weighted difference is `μ_ON − μ_OFF`. A group
-with zero eligible trials has an undefined mean.
-
-The fixed-weight framework assigns identical values to equivalent batting
-outcomes across all seasons. A home run in 1998 and one in 2025 both receive
-a weight of 2.00 regardless of differences in the offensive environment.
-[Appendix A.1 methodology](docs/analysis/appendix_a_1_weighted_on_off.md)
-
-The binomial statistic compares hit probabilities. The weighted multinomial
-statistic compares weighted production means across seven outcomes and allows
-different ON and OFF distributions under the null. In 100,000 validation
-fits there were no optimizer failures. Nominal 5% rejection was 4.57–5.24%
-in the five realistic null configurations and 1.63% in the sparse case.
-[Multinomial derivation](docs/methodology/multinomial_on_off.md) ·
-[Appendix A.2 validation](docs/analysis/appendix_a_2_weighted_validation.md)
-
-## Key Findings
-
-LIPS scores shifted lower than RISP scores at all three PA cutoffs. The signed
-scores and raw hit-rate differences showed near-zero correlations. In 10,000
-simulations that preserved shared batting trials, the observed score
-correlations fell within the central 95% null intervals.
-
-| Result for hitters with ≥ 2,000 PA | Estimate |
-|---|---:|
-| Mean signed score, RISP / LIPS | −0.212 / −0.989 |
-| Observed score correlation, Pearson / Spearman | 0.0043 / 0.0109 |
-| Overlap-aware null mean, Pearson / Spearman | −0.0018 / −0.0016 |
-| One-sided p-value for positive excess, Pearson / Spearman | 0.432 / 0.359 |
-
-![RISP and LIPS score distributions by career PA cutoff](Results/RISP_LIPS/figures/boxplot.png)
-
-### Bayesian upper limits
-
-At PA ≥ 2,000 and signed score S < 3, the median conditional 95%
-upper limit is 3.17 percentage points for RISP (859 players) and
-2.91 for LIPS (861 players). The limit complements the signed score
-by bounding the size of a positive effect under the model.
-[Upper-limit analysis](docs/analysis/02_upper_limit_analysis.md)
-
-### External benchmark
-
-Against Baseball-Reference Clutch at 2,000 PA, Pearson r was 0.276 for
-RISP and 0.354 for LIPS. The one-sided Williams test gave p = 0.041, and
-the two-sided bootstrap 95% interval for the difference was [−0.013, 0.167].
-[Step 3 results](docs/analysis/03_external_benchmark.md)
-
-At 2,000 PA, combining RISP and LIPS yielded Pearson r = 0.448 and
-R² = 0.201 in sample. Five-fold validation yielded r = 0.443 and R² =
-0.197, compared with R² = 0.123 for LIPS alone.
-[Regression extension](docs/analysis/03_external_benchmark.md#regression-extension)
-
-### Overall batting performance dependence
-
-At 2,000 PA, WPA correlates about 0.84 with both OPS+ and wRC+.
-The Clutch estimates have weaker negative correlations (−0.262 and
-−0.253), and the ON/OFF scores have smaller point-estimate magnitudes
-on these broader production indexes. The overall hit-rate results
-show a different pattern. Adjusted comparisons most clearly support
-a reduction for weighted RISP.
-[Step 3 extension](docs/analysis/03_external_benchmark.md#dependence-on-overall-batting-performance)
-
-### Weighted baseline
-
-The original and weighted analyses use 4,569,453 and 5,019,958 eligible
-trials, respectively. Across the league, pooled RISP ON-minus-OFF changes from
-−0.00343 in hit rate to +0.00260 in weighted production, while the LIPS
-comparison remains negative. Across all three cutoffs, wRISP averages
-slightly above zero and wLIPS averages below zero.
-
-| At least 2,000 PA (861 hitters) | Binomial mean (SD) | Weighted mean (SD) |
+| Clutch benchmark, PA ≥ 2,000 | Binomial | Weighted |
 |---|---:|---:|
-| RISP | −0.212 (1.051) | +0.102 (1.051) |
-| LIPS | −0.989 (1.079) | −1.009 (1.083) |
+| RISP Pearson r | 0.276 | 0.308 |
+| LIPS Pearson r | 0.354 | 0.405 |
+| Combined in-sample $R^2$ | 0.201 | 0.255 |
+| Combined CV $R^2$ | 0.197 | 0.249 |
+| Combined CV RMSE | 2.504 | 2.420 |
+| Combined CV MAE | 1.946 | 1.875 |
 
-![Original and weighted RISP scores](Results/Weighted_ON_OFF/Baseline/figures/risp_comparison.png)
+![Binomial and multinomial cross-validated model performance](Results/Weighted_ON_OFF/External_Benchmark/figures/cv_performance.png)
 
-![Original and weighted LIPS scores](Results/Weighted_ON_OFF/Baseline/figures/lips_comparison.png)
+The paired 95% bootstrap intervals supported a CV $R^2$ gain of 0.0526 [0.0277, 0.0775], an RMSE reduction of 0.0834 [0.0429, 0.1245], and an MAE reduction of 0.0713 [0.0324, 0.1107]. They use fixed out-of-fold predictions and omit full retraining variability. The binomial model retains about **79%** of the weighted model's CV $R^2$ and has a closed-form score and an existing upper-limit construction. The weighted model improves agreement, with the clearest reduction in overall batting dependence concentrated in weighted RISP. [Weighted external benchmark](docs/analysis/appendix_a_4_weighted_benchmark.md)
 
-### Weighted external benchmark
+## Appendix B — How does ON/OFF compare with simpler measures?
 
-At 2,000 PA, the weighted combined model raised pooled CV R² from
-0.197 to 0.249, a difference of 0.053 (paired bootstrap 95% interval
-[0.028, 0.078]). CV RMSE fell from 2.504 to 2.420. The weighted scores
-remain nearly uncorrelated with each other (Pearson r = 0.016).
-[Appendix A.4 methodology and results](docs/analysis/appendix_a_4_weighted_benchmark.md)
+Tom Ruane's *In Search of Clutch Hitting* (2005) uses BPS, batting average plus slugging percentage. We adapt the unadjusted RISP-minus-non-RISP BPS difference to this study's period and sample, leaving Ruane's contextual checks outside the comparison. The raw models below use ON-minus-OFF differences without the signed likelihood-ratio transformation. [Ruane adaptation and original study](docs/analysis/appendix_b_benchmark_comparison.md#predictor-definitions)
 
-| Model | In-sample Pearson r | In-sample R² | CV Pearson r | CV R² | CV RMSE | CV MAE |
-|---|---:|---:|---:|---:|---:|---:|
-| RISP | 0.276 | 0.076 | 0.271 | 0.074 | 2.689 | 2.097 |
-| LIPS | 0.354 | 0.125 | 0.350 | 0.123 | 2.616 | 2.034 |
-| RISP + LIPS | 0.448 | 0.201 | 0.443 | 0.197 | 2.504 | 1.946 |
-| wRISP | 0.308 | 0.095 | 0.304 | 0.092 | 2.661 | 2.071 |
-| wLIPS | 0.405 | 0.164 | 0.401 | 0.161 | 2.559 | 1.981 |
-| wRISP + wLIPS | 0.505 | 0.255 | 0.499 | 0.249 | 2.420 | 1.875 |
+| Predictor or model, PA ≥ 2,000 | CV $R^2$ | CV RMSE |
+|---|---:|---:|
+| Raw RISP hit-rate difference | 0.058 | 2.711 |
+| Raw LIPS hit-rate difference | 0.095 | 2.658 |
+| Both raw hit-rate differences | 0.151 | 2.573 |
+| Raw weighted RISP difference | 0.077 | 2.684 |
+| Raw weighted LIPS difference | 0.140 | 2.591 |
+| Both raw weighted differences | 0.215 | 2.475 |
+| Binomial RISP | 0.074 | 2.689 |
+| Ruane RISP BPS | 0.081 | 2.678 |
+| Weighted RISP | 0.092 | 2.661 |
+| Binomial LIPS | 0.123 | 2.616 |
+| Weighted LIPS | 0.161 | 2.559 |
+| Combined binomial ON/OFF | 0.197 | 2.504 |
+| Combined weighted ON/OFF | 0.249 | 2.420 |
 
-![Cross-validated performance](Results/Weighted_ON_OFF/External_Benchmark/figures/cv_performance.png)
+The RISP-only ordering is consistent with a benefit from richer outcomes, but both paired intervals comparing Ruane with binomial or weighted RISP include zero. Binomial LIPS alone has a higher point estimate than Ruane's RISP BPS. That comparison suggests that the situation definition matters and leaves open how well BPS would perform if applied to LIPS. Separately, paired bootstrap intervals support gains for both combined ON/OFF models over their corresponding combined raw differences in the primary sample. [Appendix B comparisons](docs/analysis/appendix_b_benchmark_comparison.md)
 
-### Appendix B benchmark comparison
+## Conclusions and future directions
 
-At PA ≥ 2,000, out-of-fold R² is 0.081 for Ruane's RISP BPS difference,
-0.151 for paired raw hit-rate differences, 0.197 for binomial ON/OFF,
-0.215 for paired raw weighted production differences, and 0.249 for
-weighted multinomial ON/OFF, on the same samples and validation folds.
-Binomial LIPS alone reaches 0.123, suggesting that late-inning pressure
-captures information beyond RISP. The comparison applies Ruane's BPS
-only to RISP and leaves its performance with LIPS open.
-[Appendix B methodology and results](docs/analysis/appendix_b_benchmark_comparison.md)
+A hitter's ON/OFF score describes evidence for a historical situational difference. The Bayesian upper limit adds an effect-size constraint when positive evidence is weak. RISP and LIPS capture complementary information for the external benchmark, even though their scores provide no evidence of a common ability in the overlap-aware test. Conventional Clutch serves as an external reference for that interpretation. Weighted outcomes improve agreement while requiring more complex estimation.
 
-## Analysis
+These are observational comparisons. Opponent quality, parks, and player usage can differ across situations. Signed significance depends on sample size and outcome variance, and pooled performance across seasons does not establish persistent ability. Fixed outcome weights, reconstructed benchmark values, and PA-weighted OPS+ and wRC+ approximations also affect interpretation. Continuous leverage-aware ON/OFF modeling is a possible next step. Joint index development remains deferred. [Research roadmap](docs/roadmap.md)
 
-| Analysis | Description | Status |
-|---|---|---|
-| [Baseline Analysis](docs/analysis/00_baseline_analysis.md) | Binomial ON/OFF statistics and significance distributions | Completed |
-| [Step 1](docs/analysis/01_risp_lips_correlation.md) | RISP–LIPS EDA, correlation analysis, and hypothesis testing | Completed |
-| [Step 2](docs/analysis/02_upper_limit_analysis.md) | Bayesian upper limits for binomial ON/OFF | Completed |
-| [Step 3](docs/analysis/03_external_benchmark.md) | Baseball-Reference Clutch and WPA benchmark | Completed |
-| [Appendix A.1](docs/analysis/appendix_a_1_weighted_on_off.md) | Fixed weights and weighted ON/OFF batting production | Completed |
-| [Appendix A.2](docs/analysis/appendix_a_2_weighted_validation.md) | Weighted multinomial likelihood and calibration | Completed |
-| [Appendix A.3](docs/analysis/appendix_a_3_weighted_baseline.md) | Weighted baseline and cutoff sensitivity | Completed |
-| [Appendix A.4](docs/analysis/appendix_a_4_weighted_benchmark.md) | Weighted external benchmark and regression | Completed |
-| [Appendix B](docs/analysis/appendix_b_benchmark_comparison.md) | Ruane BPS, raw differences, and ON/OFF benchmark comparison | Completed |
+## Analysis navigation
+
+| Report | Contents |
+|---|---|
+| [Baseline](docs/analysis/00_baseline_analysis.md) | Binomial scores, eligibility, and distributions |
+| [Step 1](docs/analysis/01_risp_lips_correlation.md) | RISP–LIPS overlap, correlations, and Monte Carlo tests |
+| [Step 2](docs/analysis/02_upper_limit_analysis.md) | Bayesian upper limits and examples |
+| [Step 3](docs/analysis/03_external_benchmark.md) | WPA and Clutch benchmarks, regression, and overall batting dependence |
+| [Appendix A.1](docs/analysis/appendix_a_1_weighted_on_off.md) | Fixed weights and outcome counts |
+| [Appendix A.2](docs/analysis/appendix_a_2_weighted_validation.md) | Multinomial likelihood validation and calibration |
+| [Appendix A.3](docs/analysis/appendix_a_3_weighted_baseline.md) | Weighted scores and cutoff sensitivity |
+| [Appendix A.4](docs/analysis/appendix_a_4_weighted_benchmark.md) | Weighted external benchmark |
+| [Appendix B](docs/analysis/appendix_b_benchmark_comparison.md) | Ruane BPS and raw-difference comparisons |
 
 ## Reproduction
 
-From the repository root, create a virtual environment with
-`python -m venv .venv` and activate it before running the following.
+From the repository root, create an environment with `python -m venv .venv`, activate it, and run the commands below. The baseline report also documents how to [rebuild the marginal summaries and histograms](docs/analysis/00_baseline_analysis.md#reproduction).
 
 ```bash
 python -m pip install -r requirements.txt
@@ -213,71 +181,45 @@ python Script/analyze_appendix_benchmarks.py
 python -m unittest discover -s tests
 ```
 
-The script uses the included data. See the [baseline reproduction commands](docs/analysis/00_baseline_analysis.md#reproduction)
-to rebuild the marginal summaries and histograms.
+The batting-dependence extension also requires local season inputs. Save the Baseball-Reference standard batting tables as `bb-YEAR.html` and the FanGraphs regular-season input extracts as `wrc-YEAR.csv` for 1998 through 2025. The preparation script uses the repository's Chadwick crosswalks and writes the period indexes consumed by the analysis script. [Baseball-Reference inputs](Data/BaseballReference/README.md#step-3-extension--ops) · [FanGraphs inputs and CSV fields](Data/FanGraphs/README.md#step-3-extension--wrc)
 
-The Baseball-Reference benchmark sums published season WPA and estimates
-period Clutch from season Win Probability statistics over 1998–2025.
-See the [data README](Data/BaseballReference/README.md) for the aggregation
-method, coverage, and reproduction command.
+```bash
+python Script/prepare_batting_performance.py ../season-inputs
+python Script/analyze_batting_performance_dependence.py
+```
 
-## Repository Structure
+## Repository structure
 
 ```text
 .
-├── README.md
 ├── AGENTS.md
+├── README.md
+├── requirements.txt
 ├── Data/
+│   ├── Retrosheet/Compact/
+│   ├── BaseballReference/
+│   └── FanGraphs/
 ├── Script/
-│   ├── binomial_upper_limit.py
-│   ├── analyze_upper_limits.py
-│   ├── prepare_weighted_on_off.py
-│   ├── multinomial_on_off.py
-│   ├── validate_weighted_on_off.py
-│   ├── analyze_weighted_baseline.py
-│   ├── analyze_weighted_benchmark.py
-│   └── analyze_appendix_benchmarks.py
 ├── Results/
 │   ├── RISP_LIPS/
 │   ├── Upper_Limits/
 │   ├── External_Benchmark/
+│   │   ├── Regression/
+│   │   └── Batting_Performance/
 │   ├── Weighted_ON_OFF/
-│   │   ├── fixed_weights.csv
-│   │   ├── risp_player_counts.csv
-│   │   ├── lips_player_counts.csv
-│   │   ├── coverage.csv
-│   │   ├── Validation/
 │   │   ├── Baseline/
+│   │   ├── Validation/
 │   │   └── External_Benchmark/
-│   └── Appendix_A/
+│   └── Appendix_A/              # Appendix B comparison results
 ├── docs/
-│   ├── methodology/
-│   │   ├── binomial_on_off.md
-│   │   ├── binomial_upper_limit.md
-│   │   └── multinomial_on_off.md
 │   ├── analysis/
-│   │   ├── 00_baseline_analysis.md
-│   │   ├── 01_risp_lips_correlation.md
-│   │   ├── 02_upper_limit_analysis.md
-│   │   ├── 03_external_benchmark.md
-│   │   ├── appendix_a_1_weighted_on_off.md
-│   │   ├── appendix_a_2_weighted_validation.md
-│   │   ├── appendix_a_3_weighted_baseline.md
-│   │   ├── appendix_a_4_weighted_benchmark.md
-│   │   └── appendix_b_benchmark_comparison.md
+│   ├── methodology/
 │   └── roadmap.md
 └── tests/
 ```
 
-## Roadmap
+## Data sources and attribution
 
-The main analysis covers detection, upper limits, and external benchmarking. Joint index development
-remains deferred. [Roadmap](docs/roadmap.md)
-
-## Data Sources and Attribution
-
-The compact extracts are derived from Retrosheet’s parsed play-by-play CSV
-files. Follow Retrosheet’s attribution and data-use terms when redistributing
-the data or derived products. [Retrosheet CSV downloads and notices](https://retrosheet.org/downloads/csvdownloads.html).
+The compact extracts derive from Retrosheet's parsed play-by-play CSV files. Source-specific processing and attribution are documented in the [Baseball-Reference data README](Data/BaseballReference/README.md) and [FanGraphs data README](Data/FanGraphs/README.md). [Retrosheet downloads and notices](https://retrosheet.org/downloads/csvdownloads.html)
 
 > The information used here was obtained free of charge from and is copyrighted by Retrosheet.
